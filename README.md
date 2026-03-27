@@ -210,12 +210,38 @@ After completion, analyze results.tsv and summarize findings.
 | 002 | L40S Optimization | ml.g7e.4xlarge | _TBD_ | _TBD_ | [Research notes](references/l40s-optimization-strategies.md) |
 | 003 | H100 Fair Comparison | ml.p5.4xlarge | _TBD_ | _TBD_ | Pending quota approval |
 
+## Choosing a Region: Spot Capacity Matters
+
+Spot instance availability varies dramatically by region. **Always check before running experiments.**
+
+```bash
+# Quick check: Spot placement score (1-10, higher = better)
+for region in us-east-1 us-east-2 us-west-2; do
+  echo -n "$region: "
+  aws ec2 get-spot-placement-scores \
+    --instance-types g7e.4xlarge --target-capacity 1 \
+    --single-availability-zone --region-names $region \
+    --region $region \
+    --query "max_by(SpotPlacementScores, &Score).Score" --output text
+done
+```
+
+Our experience:
+
+| Region | Spot Score | Result |
+|--------|-----------|--------|
+| us-west-2 (Oregon) | 1-2 | Stuck in "Starting" for 30+ min |
+| **us-east-1 (Virginia)** | **9** | **Allocated in ~2 min** |
+
+See [Spot Capacity Guide](docs/spot-capacity-guide.md) for the full guide including price history checks and quota management.
+
 ## Documentation
 
 | Document | Description |
 |----------|-------------|
 | [Comparison Report](docs/comparison-report.md) | Original sequential vs serverless parallel pipeline — architecture, cost, search efficiency |
 | [GPU Cost Analysis](docs/gpu-cost-analysis.md) | P5 (H100) vs P6 (B200/B300) pricing and performance for autoresearch workloads |
+| [Spot Capacity Guide](docs/spot-capacity-guide.md) | How to find available Spot capacity by region before running experiments |
 | [Architecture Diagram](docs/architecture.svg) | System architecture (SageMaker + S3 + local orchestrator) |
 | [Sequential vs Parallel](docs/comparison-diagrams.svg) | Visual comparison of sequential and parallel experiment pipelines |
 
