@@ -1,8 +1,8 @@
 # Serverless Autoresearch
 
-> Karpathy의 [autoresearch](https://github.com/karpathy/autoresearch)를 SageMaker Managed Spot Training 위에서 **병렬 진화 파이프라인**으로 실행합니다.
+> Run Karpathy's [autoresearch](https://github.com/karpathy/autoresearch) as a **parallel evolution pipeline** on SageMaker Managed Spot Training.
 
-원본 autoresearch는 단일 GPU에서 순차적으로 실험을 수행합니다 (12실험/시간, 100실험에 ~8시간). 이 프로젝트는 클라우드의 수평 확장과 **HUGI (Hurry Up and Get Idle)** 패턴을 활용하여 **동일 비용(~$4)으로 ~100분에 100실험**을 완료합니다.
+The original autoresearch runs experiments sequentially on a single GPU — 12 experiments/hour, ~8 hours for 100 experiments. This project leverages cloud horizontal scaling and the **HUGI (Hurry Up and Get Idle)** pattern to complete **100 experiments in ~100 minutes at the same cost (~$4)** with zero GPU idle time.
 
 ## Architecture
 
