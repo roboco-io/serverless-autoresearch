@@ -2,17 +2,41 @@
 
 > Experimenting with cost-effective ways to run Karpathy's [autoresearch](https://github.com/karpathy/autoresearch) on AWS infrastructure, and documenting the journey as a hands-on tutorial.
 
-## What is this?
+## Why This Project?
 
-This project explores how to run **autonomous AI-driven ML research** (autoresearch) on AWS as cost-effectively as possible. We experiment with different GPU instances, spot pricing strategies, and parallel execution patterns — then turn every experiment into a step-by-step tutorial that others can follow.
+Karpathy's [autoresearch](https://github.com/karpathy/autoresearch) shows that AI agents can autonomously improve deep learning models overnight — but it assumes you have an H100 GPU sitting idle for 8 hours. **Most people don't have that.**
 
-### Goals
+This project answers: **Can you get the same results using cheap cloud GPUs, paying only pennies per experiment?**
 
-1. **Cost optimization** — Find the most cost-effective GPU instance and pricing model for autoresearch on AWS (Spot, On-Demand, Capacity Blocks)
-2. **Performance maximization** — Squeeze maximum val_bpb improvement from each dollar spent, using parallel evolution and cloud-native patterns
-3. **Tutorial creation** — Document every experiment with reproducible steps, cost breakdowns, and lessons learned so anyone can replicate the results
+The answer is yes. We run 83 experiments **2.3x faster** and **5-18x cheaper** than the original, using SageMaker Spot instances that spin up for 5 minutes and disappear.
 
-### Approach
+| | Original (H100, 8 hours) | This project (L40S Spot) |
+|---|---|---|
+| Cost for 83 experiments | $7-24 | **$1.33** |
+| Wall clock time | ~8 hours | **~3.5 hours** |
+| GPU idle cost | ~50% wasted | **$0** (HUGI pattern) |
+| Experiments in parallel | 1 | **4** |
+| GPU required | H100 80GB | **Any** (L40S, A10G, H100...) |
+
+## Who Is This For?
+
+- **ML practitioners without expensive GPUs** — Run autoresearch on AWS Spot for $0.02/experiment instead of buying an H100
+- **Teams exploring model architectures** — Use cheap L40S Spot to validate hypotheses, then apply winning configurations to production H100 training ([research shows this transfers well](docs/insights.md#11-spot-gpus-are-valid-proxies-for-large-scale-training))
+- **Cloud cost optimizers** — Learn HUGI pattern, Spot capacity management, and parallel execution strategies applicable beyond ML
+- **Educators and students** — Every experiment is documented as a tutorial with exact commands, costs, and lessons learned
+
+## How to Use This
+
+### As a tutorial
+Read the [experiments](experiments/) folder — each experiment is a self-contained story with hypothesis, setup, results, and lessons learned. Start with [001-baseline](experiments/001-baseline-l40s/report.md).
+
+### As a pipeline
+Fork this repo, set up your AWS credentials, and run `make run` to start your own autonomous experiments. The pipeline handles candidate generation, parallel SageMaker job submission, result collection, and selection — all automatically.
+
+### As a reference
+The [docs](docs/) folder contains practical guides on [Spot capacity](docs/spot-capacity-guide.md), [GPU cost analysis](docs/gpu-cost-analysis.md), and [battle-tested insights](docs/insights.md) from real experiments. The [sagemaker-spot-training skill](https://github.com/roboco-io/claude-skills) packages these lessons for Claude Code users.
+
+## How It Works
 
 The original autoresearch runs experiments sequentially on a single GPU — 12 experiments/hour, ~8 hours for 100 experiments. We built a **parallel evolution pipeline** on SageMaker Managed Spot Training that leverages the **HUGI (Hurry Up and Get Idle)** pattern to complete **100 experiments in ~100 minutes at the same cost (~$4)** with zero GPU idle time.
 
