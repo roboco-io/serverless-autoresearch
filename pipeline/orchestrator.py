@@ -35,8 +35,6 @@ def validate_config(config: dict) -> list[str]:
     errors = []
     if not config["aws"].get("role_arn"):
         errors.append("aws.role_arn이 설정되지 않았습니다. infrastructure/setup_iam.sh를 실행하세요.")
-    if not config["sagemaker"].get("image_uri"):
-        errors.append("sagemaker.image_uri가 설정되지 않았습니다. infrastructure/build_and_push.sh를 실행하세요.")
     return errors
 
 

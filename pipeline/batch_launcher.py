@@ -6,7 +6,7 @@ from typing import Optional
 
 import boto3
 import sagemaker
-from sagemaker.estimator import Estimator
+from sagemaker.pytorch import PyTorch
 
 
 def get_session(profile: str, region: str) -> sagemaker.Session:
@@ -49,7 +49,6 @@ def launch_batch(
 
     bucket = s3_cfg.get("bucket") or session.default_bucket()
     role = aws_cfg["role_arn"]
-    image_uri = sm_cfg["image_uri"]
 
     s3_data = f"s3://{bucket}/{s3_cfg['data_prefix']}"
     s3_tokenizer = f"s3://{bucket}/{s3_cfg['tokenizer_prefix']}"
@@ -81,11 +80,15 @@ def launch_batch(
         # 각 후보의 source_dir 준비: train.py + prepare.py를 임시 디렉토리에 복사
         source_dir = _prepare_source_dir(candidate["train_py_path"], generation, cid)
 
-        estimator = Estimator(
-            image_uri=image_uri,
+        # PyTorch Framework Estimator — Docker 빌드 불필요
+        # SageMaker DLC (PyTorch 2.8 + CUDA 12.9) 사용
+        # requirements.txt로 추가 의존성(kernels, rustbpe 등) 설치
+        estimator = PyTorch(
             role=role,
             instance_count=1,
             instance_type=sm_cfg["instance_type"],
+            framework_version=sm_cfg.get("framework_version", "2.8.0"),
+            py_version=sm_cfg.get("py_version", "py312"),
             use_spot_instances=sm_cfg["use_spot"],
             max_run=sm_cfg["max_run"],
             max_wait=sm_cfg["max_wait"] if sm_cfg["use_spot"] else None,
@@ -150,6 +153,9 @@ def _prepare_source_dir(train_py_path: str, generation: int, candidate_id: str) 
     shutil.copy2(project_root / "prepare.py", source_dir / "prepare.py")
     shutil.copy2(project_root / "sagemaker" / "entry_point.py", source_dir / "entry_point.py")
     shutil.copy2(project_root / "sagemaker" / "train_wrapper.py", source_dir / "train_wrapper.py")
+    # requirements.txt (SageMaker DLC가 자동 설치)
+    shutil.copy2(project_root / "infrastructure" / "requirements-train.txt",
+                 source_dir / "requirements.txt")
 
     return source_dir
 
