@@ -1,422 +1,353 @@
-# Autoresearch 비교 분석 보고서
+# Autoresearch Comparison Report
 
-> Original vs Serverless Parallel Evolution Pipeline
+> Original Sequential vs Serverless Parallel Evolution Pipeline
 
 ---
 
 ## 1. Executive Summary
 
-Karpathy의 autoresearch는 AI 에이전트가 자율적으로 딥러닝 모델을 개선하는 실험 프레임워크다. 본 보고서는 **원본(순차 실행, H100)**과 **서버리스 병렬 진화 파이프라인(SageMaker Spot, A10G)**의 아키텍처, 성능, 비용, 실험 효율성을 비교 분석한다.
+Karpathy's autoresearch is a framework where AI agents autonomously improve deep learning models through iterative experimentation. This report compares the **original (sequential, H100)** and the **serverless parallel evolution pipeline (SageMaker Spot, H100)** in terms of architecture, performance, cost, and experimentation efficiency.
 
-### 핵심 결론
+### Key Findings
 
-| 지표 | 원본 (H100, 순차) | 서버리스 (A10G, 병렬) | 비고 |
-|------|-------------------|----------------------|------|
-| 100실험 소요시간 | ~8시간 | **~100분** | 4.8× 단축 |
-| 실험당 비용 | ~$0.04* | ~$0.04 | 동등 |
-| GPU 유휴 시간 | 높음 (에이전트 사고 시간) | **0** (HUGI) | 서버리스 우위 |
-| 세대당 다양성 | 1개 아이디어 | **10개 동시 탐색** | 탐색 효율 10× |
-| GPU 성능 | H100 (989 TFLOPS) | A10G (70.5 TFLOPS) | 원본 14× |
-| 모델 규모 | ~50M params | ~6M params | A10G VRAM 제약 |
+| Metric | Original (H100, Sequential) | Serverless (H100, Parallel) | Notes |
+|--------|----------------------------|----------------------------|-------|
+| Time for 100 experiments | ~8 hours | **~100 min** | 4.8x faster |
+| Cost per experiment | ~$0.04* | ~$0.04 | Equivalent |
+| GPU idle time | High (agent thinking time) | **0** (HUGI) | Serverless wins |
+| Diversity per generation | 1 idea | **10 simultaneous explorations** | 10x search efficiency |
+| GPU | H100 (989 TFLOPS) | H100 (989 TFLOPS) | Identical hardware |
+| Model size | ~50M params | ~50M params | Fair comparison |
 
-*H100 시간당 $3.00 기준, 에이전트 대기시간 포함 실효 활용률 ~50%
+*Based on H100 at $3.00/hr with ~50% effective utilization including agent idle time
 
 ---
 
-## 2. 원본 Autoresearch 실험 결과 분석
+## 2. Original Autoresearch Results Analysis
 
-### 2.1 실험 개요
+### 2.1 Experiment Overview
 
-원본 레포의 `progress.png`에서 확인된 실험 결과:
+Results observed from the original repo's `progress.png`:
 
-- **총 실험 수**: 83회
-- **개선 채택(Keep)**: 15회 (18.1%)
-- **폐기(Discard)**: ~65회
-- **크래시(Crash)**: ~3회
+- **Total experiments**: 83
+- **Improvements kept**: 15 (18.1% keep rate)
+- **Discarded**: ~65
+- **Crashes**: ~3
 - **Baseline val_bpb**: ~0.998
-- **최종 Best val_bpb**: ~0.976
-- **총 개선폭**: ~0.022 (약 2.2% 개선)
+- **Final best val_bpb**: ~0.976
+- **Total improvement**: ~0.022 (~2.2%)
 
-### 2.2 개선 곡선 특성
+### 2.2 Improvement Curve Characteristics
 
-```
-val_bpb
-1.000 ┤●  baseline
-0.995 ┤ ╲   초반 급격한 개선 (실험 #1~10)
-0.990 ┤  ╲
-0.985 ┤   ╲── 중반 안정적 개선 (실험 #10~40)
-0.980 ┤     ╲
-0.978 ┤      ╲── 후반 수렴 (실험 #40~83)
-0.976 ┤        ●  best
-      └─────────────────────── experiment #
-       0   20   40   60   80
-```
+**Observations:**
+- **Early phase (exp #1-10)**: Rapid improvement from LR tuning and basic hyperparameter optimization
+- **Mid phase (exp #10-40)**: Gradual improvement from architecture changes (depth, aspect ratio, window pattern)
+- **Late phase (exp #40-83)**: Diminishing returns, fine-tuning territory — keep rate drops significantly
 
-**관찰 사항:**
-- **초반 (실험 #1~10)**: LR 조정, 기본 하이퍼파라미터 최적화로 빠른 개선
-- **중반 (실험 #10~40)**: 아키텍처 변경(depth, aspect ratio, window pattern)으로 점진적 개선
-- **후반 (실험 #40~83)**: 수확 체감, 미세 조정 영역 — keep rate 크게 감소
+### 2.3 Original Experiment Environment
 
-### 2.3 원본 실험 환경
-
-| 항목 | 값 |
-|------|-----|
+| Parameter | Value |
+|-----------|-------|
 | GPU | NVIDIA H100 80GB |
 | Peak TFLOPS (BF16) | 989.5 |
 | VRAM | 80 GB |
-| 모델 크기 | ~50M params |
+| Model size | ~50M params |
 | DEPTH | 8 |
 | DEVICE_BATCH_SIZE | 128 |
 | TOTAL_BATCH_SIZE | 524,288 (2^19) |
 | WINDOW_PATTERN | SSSL |
-| 학습 시간 | 300초 (5분) |
+| Training time | 300s (5 min) |
 | MFU | ~40% |
 
 ---
 
-## 3. 서버리스 파이프라인 설계 비교
+## 3. Pipeline Design Comparison
 
-### 3.1 아키텍처 비교
+### 3.1 Architecture Comparison
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│  원본: Sequential Agent Loop                                  │
-│                                                               │
-│  Agent → modify → train(5min) → eval → keep/discard → repeat │
-│          ↑                                          ↓         │
-│          └──────────── 1 experiment / 5min ──────────┘        │
-│                                                               │
-│  Timeline: ■□■□■□■□■□■□ (12 exp/hr, GPU idle during □)      │
-└──────────────────────────────────────────────────────────────┘
+<p align="center">
+  <img src="comparison-diagrams.svg" alt="Sequential vs Parallel Comparison" width="100%">
+</p>
 
-┌──────────────────────────────────────────────────────────────┐
-│  서버리스: Parallel Evolution Pipeline                         │
-│                                                               │
-│  Generator → N candidates → N SageMaker Jobs (parallel)       │
-│                              ↓                                │
-│  Selector ← N results ← All complete in ~8min                │
-│       ↓                                                       │
-│  New baseline → Next generation                               │
-│                                                               │
-│  Timeline: ████████████ (10 exp/8min, 0 idle)                │
-└──────────────────────────────────────────────────────────────┘
-```
+### 3.2 Experimentation Strategy Comparison
 
-### 3.2 실험 전략 비교
+| Aspect | Original (Sequential) | Serverless (Parallel) |
+|--------|----------------------|----------------------|
+| **Search strategy** | Single-path greedy search | Multi-path population-based search |
+| **Diversity** | 1 idea from 1 agent | 4 strategies (conservative/moderate/aggressive/crossover) |
+| **Local optima escape** | Difficult (sequential dependency) | Easy (aggressive candidates attempt escape) |
+| **Information utilization** | References only previous result | References entire generation results + crossover |
+| **Failure cost** | 5 min wasted | Zero additional time cost (parallel) |
 
-| 측면 | 원본 (순차) | 서버리스 (병렬) |
-|------|------------|----------------|
-| **탐색 전략** | 단일 경로 탐색 (greedy) | 다중 경로 동시 탐색 (population-based) |
-| **다양성** | 에이전트 1개의 아이디어 | 4가지 전략 (conservative/moderate/aggressive/crossover) |
-| **로컬 최적 탈출** | 어려움 (순차 의존) | 용이 (aggressive 후보가 탈출 시도) |
-| **정보 활용** | 이전 1개 결과만 참조 | 세대 전체 결과 참조 + crossover |
-| **실패 비용** | 5분 낭비 | 병렬이므로 추가 시간 비용 0 |
+### 3.3 Candidate Diversity Strategy
 
-### 3.3 후보 다양성 전략
+The serverless pipeline generates 10 candidates per generation across 4 strategies:
 
-서버리스 파이프라인은 세대당 10개 후보를 4가지 전략으로 배분:
+| Strategy | Count | Description |
+|----------|-------|-------------|
+| **Conservative** | 3 | LR adjustments (±10-30%) — stable exploration near current optimum |
+| **Moderate** | 4 | Architecture changes (DEPTH, ASPECT_RATIO, BATCH_SIZE, WINDOW) — explore new regions |
+| **Aggressive** | 2 | Radical combinations (deep-narrow, wide-shallow, high-LR) — attempt local optima escape |
+| **Crossover** | 1 | Combine ideas from previous generation's top-2 — breed successful ideas |
 
-```
-세대당 10 후보:
-├── Conservative (3개): LR ±10-30% 미세 조정
-│   → 현재 최적점 근처 안정적 탐색
-├── Moderate (4개): DEPTH, ASPECT_RATIO, BATCH_SIZE, WINDOW 변경
-│   → 구조적 변경으로 새로운 영역 탐색
-├── Aggressive (2개): 급진적 조합 (deep-narrow, wide-shallow, high-LR)
-│   → 로컬 최적 탈출 시도
-└── Crossover (1개): 이전 세대 Top-2 아이디어 결합
-    → 성공한 아이디어 교배
-```
-
-**기대 효과**: 원본에서 83실험 중 15개(18%)만 개선된 반면, 다양성 전략으로 세대당 keep rate를 높이고 수렴 속도를 가속화할 수 있다.
+**Expected effect**: While the original achieves only 15 improvements out of 83 experiments (18%), the diversity strategy is expected to increase the per-generation keep rate and accelerate convergence.
 
 ---
 
-## 4. 하드웨어 & 모델 비교
+## 4. Hardware Comparison
 
-### 4.1 GPU 스펙 비교
+### 4.1 GPU Specifications
 
-| 스펙 | H100 (원본) | A10G (서버리스) | 비율 |
-|------|------------|----------------|------|
-| BF16 TFLOPS | 989.5 | 70.5 | 14.0× |
-| VRAM | 80 GB | 24 GB | 3.3× |
-| 메모리 대역폭 | 3,350 GB/s | 600 GB/s | 5.6× |
-| Compute Capability | 9.0 (Hopper) | 8.6 (Ampere) | - |
-| Flash Attention 3 | varunneal (최적) | kernels-community (호환) | - |
-| SageMaker Spot 가격 | N/A | ~$0.30/hr | - |
+Both approaches use the same GPU (H100), ensuring a fair comparison of the **pipeline methodology** rather than hardware differences.
 
-### 4.2 모델 파라미터 적응
+| Spec | Original | Serverless |
+|------|----------|-----------|
+| GPU | H100 80GB (single, always-on) | H100 80GB × N (Spot, on-demand) |
+| Instance | Local/Cloud VM | ml.p5.4xlarge (SageMaker) |
+| Pricing model | On-demand or reserved | **Managed Spot (60-70% savings)** |
+| Flash Attention 3 | varunneal (optimized) | varunneal (identical — same Hopper GPU) |
+| Model parameters | ~50M | ~50M |
+| DEPTH | 8 | 8 |
 
-A10G의 24GB VRAM 제약으로 모델 축소가 필요:
+### 4.2 Expected Performance
 
-| 파라미터 | H100 원본 | A10G 적응 | 영향 |
-|---------|----------|----------|------|
-| DEPTH | 8 | 4 | 레이어 수 절반 |
-| model_dim | 768 (8×96→128×6) | 256 (4×64→128×2) | 차원 1/3 |
-| n_head | 6 | 2 | 어텐션 헤드 감소 |
-| DEVICE_BATCH_SIZE | 128 | 32 | 배치 1/4 |
-| TOTAL_BATCH_SIZE | 2^19 (524K) | 2^17 (131K) | 토큰/스텝 1/4 |
-| WINDOW_PATTERN | SSSL | SL | 윈도우 단순화 |
-| **총 파라미터** | **~50M** | **~6M** | **1/8 규모** |
-
-**중요**: val_bpb 절대값은 직접 비교 불가. 동일 시간 예산(5분)에서 **각 플랫폼 최적 모델**을 찾는 것이 목표.
-
-### 4.3 예상 성능 차이
-
-| 지표 | H100 예상 | A10G 예상 | 근거 |
-|------|----------|----------|------|
-| Baseline val_bpb | ~0.998 | ~1.05-1.10 | 모델 규모 차이 |
-| 5분간 처리 토큰 | ~500M | ~50-80M | TFLOPS + batch 차이 |
-| MFU | ~40% | ~25-35% | FA3 최적화 수준 차이 |
-| 최종 개선폭 | ~2.2% | **TBD** | 실험 후 측정 |
+Since both use identical H100 hardware and the same `train.py`:
+- **Baseline val_bpb should be identical** (~0.998)
+- **MFU should be comparable** (~40%)
+- The only difference is the **search efficiency** of the parallel pipeline
 
 ---
 
-## 5. 비용 효율성 분석
+## 5. Cost Efficiency Analysis
 
-### 5.1 실험당 비용 비교
-
-```
-원본 (H100 on-demand, 순차):
-  GPU 시간: 5분 학습 + ~3분 에이전트 대기 = ~8분/실험
-  실효 활용률: ~60% (에이전트 사고/코드 수정 시간)
-  비용: $3.00/hr × (8/60)hr = $0.40/실험 (on-demand)
-
-원본 (H100 spot, 순차):
-  비용: ~$0.90/hr × (8/60)hr = $0.12/실험
-
-서버리스 (A10G spot, 병렬):
-  GPU 시간: 5분 학습 + 3분 SageMaker 오버헤드 = ~8분/실험
-  실효 활용률: 100% (HUGI - 실행 시간만 과금)
-  비용: $0.30/hr × (8/60)hr = $0.04/실험
-```
-
-### 5.2 100실험 총 비용
-
-| 시나리오 | 비용 | 시간 | $/시간 |
-|---------|------|------|--------|
-| H100 on-demand, 순차 | ~$40.00 | ~8시간 | $5.00 |
-| H100 spot, 순차 | ~$12.00 | ~8시간 | $1.50 |
-| **A10G spot, 병렬** | **~$4.00** | **~100분** | **$2.40** |
-
-### 5.3 HUGI 패턴의 비용 이점
+### 5.1 Per-Experiment Cost Comparison
 
 ```
-전통적 GPU 서버 운용:
-  ████░░░░████░░░░████░░░░████░░░░  (활용률 ~50%)
-  ↑학습   ↑대기   ↑학습   ↑대기
-  24시간 상시 과금: $72/day (H100)
+Original (H100 on-demand, sequential):
+  GPU time: 5 min training + ~3 min agent idle = ~8 min/experiment
+  Effective utilization: ~60% (agent thinking/code modification time)
+  Cost: $3.00/hr × (8/60)hr = $0.40/experiment (on-demand)
+
+Original (H100 spot, sequential):
+  Cost: ~$0.90/hr × (8/60)hr = $0.12/experiment
+
+Serverless (H100 spot, parallel):
+  GPU time: 5 min training + 3 min SageMaker overhead = ~8 min/experiment
+  Effective utilization: 100% (HUGI — billed only for execution time)
+  Cost: ~$0.50/hr × (8/60)hr = ~$0.07/experiment
+```
+
+### 5.2 Total Cost for 100 Experiments
+
+| Scenario | Cost | Time | $/hour |
+|----------|------|------|--------|
+| H100 on-demand, sequential | ~$40.00 | ~8 hours | $5.00 |
+| H100 spot, sequential | ~$12.00 | ~8 hours | $1.50 |
+| **H100 spot, parallel** | **~$7.00** | **~100 min** | **$4.20** |
+
+### 5.3 HUGI Pattern Cost Advantage
+
+```
+Traditional GPU server operation:
+  ████░░░░████░░░░████░░░░████░░░░  (utilization ~50%)
+  ↑train  ↑idle   ↑train  ↑idle
+  Billed 24/7: $72/day (H100)
 
 HUGI (Hurry Up and Get Idle):
-  ██████████                         (활용률 100%)
-  ↑ 10개 병렬 burst                   ↑ 즉시 종료, 과금 0
-  실제 과금: ~8분 × 10 = 80분 → $0.40/세대
+  ██████████                         (utilization 100%)
+  ↑ N GPUs burst in parallel    ↑ all terminate, $0
+  Actual billing: ~8 min × 10 = 80 GPU-min → ~$0.70/generation
 ```
 
 ---
 
-## 6. 시간 효율성 분석
+## 6. Time Efficiency Analysis
 
-### 6.1 100실험 완료 타임라인
+### 6.1 Timeline for 100 Experiments
 
 ```
-원본 (순차):
+Original (sequential):
 Hr 0  ┤■
-Hr 1  ┤■■■■■■■■■■■■ (12실험)
-Hr 2  ┤■■■■■■■■■■■■ (24실험)
-Hr 3  ┤■■■■■■■■■■■■ (36실험)
-Hr 4  ┤■■■■■■■■■■■■ (48실험)
-Hr 5  ┤■■■■■■■■■■■■ (60실험)
-Hr 6  ┤■■■■■■■■■■■■ (72실험)
-Hr 7  ┤■■■■■■■■■■■■ (84실험)
-Hr 8  ┤■■■■■■■■■■■■ (96실험)
-      └─ 총 ~8시간, 실험 결과는 다음 날 아침에 확인
+Hr 1  ┤■■■■■■■■■■■■ (12 experiments)
+Hr 2  ┤■■■■■■■■■■■■ (24 experiments)
+...
+Hr 8  ┤■■■■■■■■■■■■ (96 experiments)
+      └─ Total ~8 hours — results available next morning
 
-서버리스 (병렬, 10×10):
-Min 0  ┤████████████████████ (세대 0: 10실험 동시)
-Min 10 ┤████████████████████ (세대 1: 10실험 동시)
-Min 20 ┤████████████████████ (세대 2)
-Min 30 ┤████████████████████ (세대 3)
-Min 40 ┤████████████████████ (세대 4)
-Min 50 ┤████████████████████ (세대 5)
-Min 60 ┤████████████████████ (세대 6)
-Min 70 ┤████████████████████ (세대 7)
-Min 80 ┤████████████████████ (세대 8)
-Min 90 ┤████████████████████ (세대 9: 100실험 완료)
-       └─ 총 ~100분, 점심시간 전에 결과 확인 가능
+Serverless (parallel, 10×10):
+Min 0   ┤████████████████████ (gen 0: 10 experiments simultaneously)
+Min 10  ┤████████████████████ (gen 1: 10 experiments simultaneously)
+Min 20  ┤████████████████████ (gen 2)
+...
+Min 90  ┤████████████████████ (gen 9: all 100 experiments done)
+        └─ Total ~100 min — results available before lunch
 ```
 
-### 6.2 피드백 루프 속도
+### 6.2 Feedback Loop Speed
 
-| 지표 | 원본 | 서버리스 |
-|------|------|---------|
-| 아이디어 → 결과 | 5분 | 8분 (SageMaker 오버헤드) |
-| 세대당 아이디어 수 | 1개 | 10개 |
-| 세대당 wall clock | 5분 | 10분 |
-| **아이디어당 실효 시간** | **5분** | **1분** |
-
----
-
-## 7. 탐색 효율성 분석
-
-### 7.1 순차 vs 병렬 탐색의 수학적 비교
-
-원본의 순차 탐색은 **greedy search**:
-- 매 단계 1개 방향만 시도
-- 실패 시 5분 낭비 후 다른 방향 시도
-- 82% 실패율 (83실험 중 68개 discard/crash)
-
-서버리스의 병렬 탐색은 **beam search** 유사:
-- 매 세대 10개 방향 동시 탐색
-- 최소 1개 성공 확률: 1 - 0.82^10 = **86.4%**
-- 세대당 개선 확률이 원본의 18% → 86%로 증가
-
-### 7.2 기대 수렴 속도
-
-원본의 관찰 데이터:
-- 83실험 / 15개선 = 평균 5.5실험당 1개선
-- 15개선 달성에 ~8시간
-
-서버리스 기대:
-- 세대당 10후보 × 18% keep rate = 평균 1.8개선/세대
-- 15개선 달성에 ~8-9세대 ≈ **~90분**
-- 다양성 전략으로 keep rate 향상 시 더 빠른 수렴 가능
+| Metric | Original | Serverless |
+|--------|----------|-----------|
+| Idea → Result | 5 min | 8 min (SageMaker overhead) |
+| Ideas per generation | 1 | 10 |
+| Wall clock per generation | 5 min | 10 min |
+| **Effective time per idea** | **5 min** | **1 min** |
 
 ---
 
-## 8. 리스크 및 제한사항
+## 7. Search Efficiency Analysis
 
-### 8.1 서버리스 파이프라인의 리스크
+### 7.1 Mathematical Comparison: Sequential vs Parallel Search
 
-| 리스크 | 영향 | 완화 방안 |
-|--------|------|----------|
-| Spot 인스턴스 중단 | 실험 유실 | crash로 처리, 다음 세대에서 재시도 |
-| A10G에서 FA3 호환성 | 성능 저하 | kernels-community fallback 사용 |
-| SageMaker 스타트업 지연 | 세대 시간 증가 | container warm-up 최적화 |
-| 모델 규모 제한 | val_bpb 상한 | DEPTH 탐색으로 최적 규모 발견 |
-| 후보 생성 품질 | 낮은 keep rate | AI 기반 후보 생성 확장 가능 |
+The original sequential search is **greedy search**:
+- Tests 1 direction per step
+- On failure, wastes 5 minutes then tries another direction
+- 82% failure rate (68 out of 83 experiments discarded/crashed)
 
-### 8.2 원본 대비 제한사항
+The serverless parallel search is similar to **beam search**:
+- Tests 10 directions simultaneously per generation
+- Probability of at least 1 success: 1 - 0.82^10 = **86.4%**
+- Per-generation improvement probability increases from 18% to 86%
 
-1. **절대 val_bpb 비교 불가**: H100(50M params)과 A10G(6M params)의 모델 규모가 달라 val_bpb 절대값은 직접 비교할 수 없음
-2. **Flash Attention 최적화**: Hopper 전용 FA3 vs 범용 FA3 fallback — A10G에서 MFU 저하 가능
-3. **코드 수정의 자유도**: 원본은 에이전트가 자유롭게 코드를 수정하지만, 서버리스는 하이퍼파라미터 중심의 구조적 변형에 집중
+### 7.2 Expected Convergence Speed
+
+Original observed data:
+- 83 experiments / 15 improvements = average 5.5 experiments per improvement
+- 15 improvements achieved in ~8 hours
+
+Serverless expected:
+- 10 candidates/generation × 18% keep rate = average 1.8 improvements/generation
+- 15 improvements achieved in ~8-9 generations ≈ **~90 minutes**
+- Diversity strategy may further improve keep rate, enabling faster convergence
 
 ---
 
-## 9. 실험 결과 (실행 후 작성)
+## 8. Risks and Limitations
 
-> 이 섹션은 실제 파이프라인 실행 후 채워질 예정입니다.
+### 8.1 Serverless Pipeline Risks
 
-### 9.1 Baseline 측정
+| Risk | Impact | Mitigation |
+|------|--------|-----------|
+| Spot instance interruption | Experiment lost | Treat as crash, retry in next generation |
+| SageMaker startup latency | Increased generation time | Container warm-up optimization |
+| Candidate generation quality | Low keep rate | Extend to AI-based candidate generation |
+| Service quota limits | Cannot run N parallel jobs | Request quota increase in advance |
 
-| 지표 | H100 원본 | A10G 서버리스 |
-|------|----------|--------------|
+### 8.2 Limitations vs Original
+
+1. **SageMaker overhead**: ~3 min startup per job (vs 0 for local execution) — partially offset by parallelism
+2. **Code modification freedom**: Original allows free-form code edits by the agent; serverless focuses on structured hyperparameter/architecture variations
+3. **Spot availability**: H100 spot instances may be scarce in some regions, requiring fallback to other GPU types
+
+---
+
+## 9. Experiment Results (To Be Completed After Execution)
+
+> This section will be populated after running the full pipeline.
+
+### 9.1 Baseline Measurement
+
+| Metric | Original (H100) | Serverless (H100) |
+|--------|-----------------|-------------------|
 | Baseline val_bpb | ~0.998 | _TBD_ |
 | Peak VRAM | ~45 GB | _TBD_ |
 | MFU | ~40% | _TBD_ |
 | Tokens processed (5min) | ~500M | _TBD_ |
 | Model params | ~50M | _TBD_ |
 
-### 9.2 최종 결과
+### 9.2 Final Results
 
-| 지표 | H100 원본 | A10G 서버리스 |
-|------|----------|--------------|
+| Metric | Original (H100) | Serverless (H100) |
+|--------|-----------------|-------------------|
 | Best val_bpb | ~0.976 | _TBD_ |
-| 총 실험 수 | 83 | _TBD_ |
+| Total experiments | 83 | _TBD_ |
 | Keep rate | 18.1% | _TBD_ |
-| 총 개선폭 (%) | ~2.2% | _TBD_ |
-| 소요 시간 | ~8시간 | _TBD_ |
-| 총 비용 | ~$12 (spot) | _TBD_ |
+| Total improvement (%) | ~2.2% | _TBD_ |
+| Wall clock time | ~8 hours | _TBD_ |
+| Total cost | ~$12 (spot) | _TBD_ |
 
-### 9.3 세대별 진행 기록
+### 9.3 Per-Generation Progress
 
-| 세대 | 후보 수 | Best val_bpb | Delta | 주요 개선 |
-|------|--------|-------------|-------|----------|
+| Generation | Candidates | Best val_bpb | Delta | Key Improvement |
+|-----------|-----------|-------------|-------|----------------|
 | 0 | _TBD_ | _TBD_ | - | baseline |
 | 1 | _TBD_ | _TBD_ | _TBD_ | _TBD_ |
 | ... | | | | |
 
-### 9.4 진행 차트
-
-> `python -m pipeline.orchestrator` 실행 후 `progress.png` 생성
-
 ---
 
-## 10. 교육/데모 활용 포인트
+## 10. Education & Demo Applications
 
-### 10.1 클라우드 네이티브 설계 원칙 시연
+### 10.1 Cloud-Native Design Principles Demonstrated
 
-1. **HUGI 패턴**: 필요할 때만 GPU를 할당하고 즉시 반환 → 비용 최적화
-2. **수평 확장**: 단일 GPU → N개 GPU 병렬로 처리량 N배 증가
-3. **Spot 인스턴스**: 70% 비용 절감, 중단 시 자동 복구
-4. **서버리스 아키텍처**: 인프라 관리 없이 실험에만 집중
+1. **HUGI Pattern**: Allocate GPUs only when needed, release immediately → cost optimization
+2. **Horizontal Scaling**: Single GPU → N GPUs in parallel for N× throughput
+3. **Spot Instances**: 60-70% cost savings with automatic interruption handling
+4. **Serverless Architecture**: Focus on experiments, not infrastructure management
 
-### 10.2 AI 연구 자동화의 미래
+### 10.2 The Future of AI Research Automation
 
-| 세대 | 연구자 역할 | AI 역할 |
-|------|------------|---------|
-| 현재 | 가설 수립 + 실험 설계 + 코드 작성 | 학습 실행 |
-| autoresearch | program.md 작성 | 가설 + 실험 + 코드 + 평가 |
-| **서버리스** | **config.yaml 설정** | **가설 + 후보 생성 + 병렬 실험 + 선택 + 진화** |
+| Era | Researcher's Role | AI's Role |
+|-----|------------------|-----------|
+| Current | Hypothesis + experiment design + code | Training execution |
+| autoresearch | Write program.md | Hypothesis + experiment + code + evaluation |
+| **Serverless** | **Configure config.yaml** | **Hypothesis + candidate generation + parallel execution + selection + evolution** |
 
-### 10.3 재현 가이드
+### 10.3 Reproduction Guide
 
 ```bash
-# 전체 재현 (약 2시간, ~$5)
-git clone <this-repo>
+# Full reproduction (~2 hours, ~$7)
+git clone https://github.com/roboco-io/serverless-autoresearch
 cd serverless-autoresearch
 
-# 1. 인프라 설정 (10분)
+# 1. Infrastructure setup (10 min)
 ./infrastructure/setup_iam.sh
-./infrastructure/build_and_push.sh
-# → config.yaml에 role_arn, image_uri 입력
+# → Enter role_arn in config.yaml
 
-# 2. 데이터 준비 (5분)
+# 2. Data preparation (5 min)
 python scripts/prepare_s3.py
 
-# 3. 검증 (1분)
+# 3. Verify (1 min)
 python -m pipeline.orchestrator --dry-run
 
-# 4. 전체 실행 (~100분, ~$4)
+# 4. Full run (~100 min, ~$7)
 python -m pipeline.orchestrator --generations 10 --population 10
 
-# 5. 결과 분석
+# 5. Analyze results
 cat results.tsv
 python scripts/cost_report.py
 ```
 
 ---
 
-## 부록 A. 기술 스택 비교
+## Appendix A. Technology Stack Comparison
 
-| 구성요소 | 원본 | 서버리스 |
-|---------|------|---------|
-| 언어 | Python 3.10+ | Python 3.11+ |
-| 프레임워크 | PyTorch 2.9.1 | PyTorch 2.9.1 |
-| 패키지 관리 | uv | uv (로컬) + Docker (학습) |
-| GPU | H100 (단일, 상시) | A10G × N (Spot, on-demand) |
-| 컴퓨팅 | 로컬/클라우드 VM | SageMaker Training Job |
-| 데이터 | 로컬 파일시스템 | S3 |
-| 에이전트 | Claude/Codex (순차) | OMC autopilot (병렬 진화) |
-| 결과 저장 | results.tsv (로컬) | results.tsv + S3 + CloudWatch |
-| 버전 관리 | git (브랜치) | git (태그 per generation) |
+| Component | Original | Serverless |
+|-----------|----------|-----------|
+| Language | Python 3.10+ | Python 3.11+ |
+| Framework | PyTorch 2.9.1 | PyTorch 2.8.0 (SageMaker DLC) |
+| Package management | uv | uv (local) + requirements.txt (SageMaker) |
+| GPU | H100 (single, always-on) | H100 × N (Spot, on-demand burst) |
+| Compute | Local / Cloud VM | SageMaker Training Job |
+| Data | Local filesystem | S3 |
+| Agent | Claude/Codex (sequential) | OMC autopilot (parallel evolution) |
+| Result storage | results.tsv (local) | results.tsv + S3 + CloudWatch |
+| Version control | git (branch per run) | git (tag per generation) |
 
-## 부록 B. 원본 progress.png 분석
+## Appendix B. Original progress.png Analysis
 
-원본 실험의 progress.png에서 관찰된 주요 개선 포인트:
+Key improvement milestones observed from the original experiment's progress.png:
 
-1. **초반 대폭 개선** (~실험 #5): LR/하이퍼파라미터 최적화 — val_bpb ~0.993
-2. **아키텍처 변경** (~실험 #15-25): depth/aspect ratio 조정 — val_bpb ~0.985
-3. **옵티마이저 튜닝** (~실험 #30-45): warmdown/weight decay — val_bpb ~0.980
-4. **미세 조정 수렴** (~실험 #50-83): 점진적 개선 — val_bpb ~0.976
+1. **Early breakthrough** (~exp #5): LR/hyperparameter optimization — val_bpb ~0.993
+2. **Architecture changes** (~exp #15-25): depth/aspect ratio adjustments — val_bpb ~0.985
+3. **Optimizer tuning** (~exp #30-45): warmdown/weight decay — val_bpb ~0.980
+4. **Fine-tuning convergence** (~exp #50-83): incremental improvements — val_bpb ~0.976
 
-이 패턴은 서버리스 파이프라인의 후보 다양성 전략 설계에 반영되었다:
-- Conservative 후보가 초반 LR 최적화를 담당
-- Moderate 후보가 아키텍처 탐색을 담당
-- Aggressive 후보가 수렴 후 돌파구를 시도
+This pattern informed the serverless pipeline's candidate diversity strategy:
+- Conservative candidates handle early LR optimization
+- Moderate candidates drive architecture exploration
+- Aggressive candidates attempt breakthroughs after convergence
 
 ---
 
-*보고서 작성: 2026-03-27*
-*상태: 파이프라인 구축 완료, 실제 실험 결과 대기 중*
+*Report date: 2026-03-27*
+*Status: Pipeline built, awaiting service quota approval for full execution*

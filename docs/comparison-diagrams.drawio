@@ -1,0 +1,233 @@
+<mxfile host="app.diagrams.net" modified="2026-03-27T00:00:00.000Z" agent="Claude" version="24.0.0" type="device">
+  <diagram id="seq-vs-parallel" name="Sequential vs Parallel">
+    <mxGraphModel dx="1200" dy="760" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="760" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="&lt;b&gt;Sequential vs Parallel Evolution&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontColor=#232F3E;" vertex="1" parent="1">
+          <mxGeometry x="350" y="10" width="500" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ===== SEQUENTIAL (LEFT) ===== -->
+        <mxCell id="seq_group" value="&lt;b&gt;Original: Sequential Agent Loop&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;~8 hours for 100 experiments&lt;/font&gt;" style="fillColor=#FFF2CC;strokeColor=#D6B656;rounded=1;verticalAlign=top;fontStyle=0;fontColor=#6D4C00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="30" y="60" width="520" height="670" as="geometry" />
+        </mxCell>
+
+        <mxCell id="seq_agent" value="&lt;b&gt;AI Agent&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Claude / Codex&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=11;" vertex="1" parent="seq_group">
+          <mxGeometry x="180" y="40" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="seq_modify" value="Modify train.py" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="seq_group">
+          <mxGeometry x="180" y="120" width="160" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="seq_train" value="&lt;b&gt;Train (5 min)&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Single H100 GPU&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6D0DE;strokeColor=#996185;fontSize=11;" vertex="1" parent="seq_group">
+          <mxGeometry x="180" y="190" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="seq_eval" value="Evaluate val_bpb" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="seq_group">
+          <mxGeometry x="180" y="270" width="160" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="seq_decide" value="Keep or&lt;br&gt;Discard?" style="shape=rhombus;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=11;" vertex="1" parent="seq_group">
+          <mxGeometry x="200" y="340" width="120" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Sequential arrows -->
+        <mxCell id="se1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" source="seq_agent" target="seq_modify" parent="seq_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="se2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" source="seq_modify" target="seq_train" parent="seq_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="se3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" source="seq_train" target="seq_eval" parent="seq_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="se4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" source="seq_eval" target="seq_decide" parent="seq_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="se5" value="repeat" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#82B366;exitX=1;exitY=0.5;entryX=1;entryY=0.5;curved=1;" edge="1" source="seq_decide" target="seq_agent" parent="seq_group">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="400" y="380" />
+              <mxPoint x="400" y="65" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Timeline sequential -->
+        <mxCell id="seq_timeline_label" value="&lt;b&gt;GPU Timeline (1 hour)&lt;/b&gt;" style="text;html=1;align=left;fontSize=11;fontColor=#232F3E;" vertex="1" parent="seq_group">
+          <mxGeometry x="20" y="460" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="seq_tl" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E6D0DE;strokeColor=#996185;" vertex="1" parent="seq_group">
+          <mxGeometry x="20" y="485" width="35" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="seq_idle1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#CCCCCC;dashed=1;" vertex="1" parent="seq_group">
+          <mxGeometry x="55" y="485" width="25" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="seq_tl2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E6D0DE;strokeColor=#996185;" vertex="1" parent="seq_group">
+          <mxGeometry x="80" y="485" width="35" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="seq_idle2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#CCCCCC;dashed=1;" vertex="1" parent="seq_group">
+          <mxGeometry x="115" y="485" width="25" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="seq_tl3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E6D0DE;strokeColor=#996185;" vertex="1" parent="seq_group">
+          <mxGeometry x="140" y="485" width="35" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="seq_idle3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#CCCCCC;dashed=1;" vertex="1" parent="seq_group">
+          <mxGeometry x="175" y="485" width="25" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="seq_tl4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E6D0DE;strokeColor=#996185;" vertex="1" parent="seq_group">
+          <mxGeometry x="200" y="485" width="35" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="seq_idle4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#CCCCCC;dashed=1;" vertex="1" parent="seq_group">
+          <mxGeometry x="235" y="485" width="25" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="seq_dots" value="..." style="text;html=1;align=center;fontSize=14;fontColor=#666666;" vertex="1" parent="seq_group">
+          <mxGeometry x="270" y="485" width="30" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="seq_legend1" value="&lt;font style=&quot;font-size:10px&quot;&gt;= Training (5 min)&lt;/font&gt;" style="text;html=1;align=left;fontSize=10;fontColor=#996185;" vertex="1" parent="seq_group">
+          <mxGeometry x="55" y="515" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="seq_legend1_box" value="" style="rounded=0;fillColor=#E6D0DE;strokeColor=#996185;" vertex="1" parent="seq_group">
+          <mxGeometry x="20" y="515" width="30" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="seq_legend2" value="&lt;font style=&quot;font-size:10px&quot;&gt;= Agent thinking (idle GPU)&lt;/font&gt;" style="text;html=1;align=left;fontSize=10;fontColor=#999999;" vertex="1" parent="seq_group">
+          <mxGeometry x="55" y="535" width="180" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="seq_legend2_box" value="" style="rounded=0;fillColor=#F5F5F5;strokeColor=#CCCCCC;dashed=1;" vertex="1" parent="seq_group">
+          <mxGeometry x="20" y="535" width="30" height="15" as="geometry" />
+        </mxCell>
+
+        <mxCell id="seq_stats" value="&lt;font style=&quot;font-size:11px&quot;&gt;&lt;b&gt;12 exp/hr&lt;/b&gt; | GPU utilization ~50%&lt;br&gt;100 experiments = &lt;b&gt;~8 hours&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;fillColor=#f8cecc;strokeColor=#b85450;rounded=1;fontSize=11;" vertex="1" parent="seq_group">
+          <mxGeometry x="60" y="580" width="280" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ===== PARALLEL (RIGHT) ===== -->
+        <mxCell id="par_group" value="&lt;b&gt;Serverless: Parallel Evolution Pipeline&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;~100 min for 100 experiments&lt;/font&gt;" style="fillColor=#D5E8D4;strokeColor=#82B366;rounded=1;verticalAlign=top;fontStyle=0;fontColor=#1A5C00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="600" y="60" width="570" height="670" as="geometry" />
+        </mxCell>
+
+        <mxCell id="par_gen" value="&lt;b&gt;1. Generate N Candidates&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Conservative(3) + Moderate(4)&lt;br&gt;+ Aggressive(2) + Crossover(1)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="par_group">
+          <mxGeometry x="140" y="40" width="250" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Parallel jobs fan-out -->
+        <mxCell id="par_j1" value="&lt;b&gt;Job 1&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;H100 Spot&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6D0DE;strokeColor=#996185;fontSize=10;" vertex="1" parent="par_group">
+          <mxGeometry x="20" y="140" width="90" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="par_j2" value="&lt;b&gt;Job 2&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;H100 Spot&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6D0DE;strokeColor=#996185;fontSize=10;" vertex="1" parent="par_group">
+          <mxGeometry x="125" y="140" width="90" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="par_j3" value="&lt;b&gt;Job 3&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;H100 Spot&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6D0DE;strokeColor=#996185;fontSize=10;" vertex="1" parent="par_group">
+          <mxGeometry x="230" y="140" width="90" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="par_dots" value="..." style="text;html=1;align=center;fontSize=16;fontColor=#666666;" vertex="1" parent="par_group">
+          <mxGeometry x="335" y="150" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="par_jN" value="&lt;b&gt;Job N&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;H100 Spot&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6D0DE;strokeColor=#996185;fontSize=10;" vertex="1" parent="par_group">
+          <mxGeometry x="380" y="140" width="90" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- All jobs run 5 min label -->
+        <mxCell id="par_5min" value="&lt;font style=&quot;font-size:10px&quot;&gt;All run 5 min in parallel&lt;/font&gt;" style="text;html=1;align=center;fontColor=#996185;fontStyle=2;" vertex="1" parent="par_group">
+          <mxGeometry x="120" y="195" width="200" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="par_collect" value="&lt;b&gt;3. Collect Results&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;val_bpb from all N jobs&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="par_group">
+          <mxGeometry x="140" y="240" width="250" height="45" as="geometry" />
+        </mxCell>
+
+        <mxCell id="par_select" value="&lt;b&gt;4. Select Best&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Lowest val_bpb → new baseline&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=11;fontStyle=0;" vertex="1" parent="par_group">
+          <mxGeometry x="140" y="310" width="250" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Parallel arrows -->
+        <mxCell id="pe_gen_j1" style="rounded=0;html=1;strokeColor=#6c8ebf;" edge="1" source="par_gen" target="par_j1" parent="par_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pe_gen_j2" style="rounded=0;html=1;strokeColor=#6c8ebf;" edge="1" source="par_gen" target="par_j2" parent="par_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pe_gen_j3" style="rounded=0;html=1;strokeColor=#6c8ebf;" edge="1" source="par_gen" target="par_j3" parent="par_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pe_gen_jN" style="rounded=0;html=1;strokeColor=#6c8ebf;" edge="1" source="par_gen" target="par_jN" parent="par_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pe_j1_col" style="rounded=0;html=1;strokeColor=#996185;" edge="1" source="par_j1" target="par_collect" parent="par_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pe_j2_col" style="rounded=0;html=1;strokeColor=#996185;" edge="1" source="par_j2" target="par_collect" parent="par_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pe_j3_col" style="rounded=0;html=1;strokeColor=#996185;" edge="1" source="par_j3" target="par_collect" parent="par_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pe_jN_col" style="rounded=0;html=1;strokeColor=#996185;" edge="1" source="par_jN" target="par_collect" parent="par_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pe_col_sel" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" source="par_collect" target="par_select" parent="par_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pe_loop" value="&lt;font style=&quot;font-size:10px&quot;&gt;Next Generation&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#82B366;exitX=1;exitY=0.5;entryX=1;entryY=0.5;curved=1;" edge="1" source="par_select" target="par_gen" parent="par_group">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="500" y="332" />
+              <mxPoint x="500" y="70" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Timeline parallel -->
+        <mxCell id="par_timeline_label" value="&lt;b&gt;GPU Timeline (10 min = 1 generation)&lt;/b&gt;" style="text;html=1;align=left;fontSize=11;fontColor=#232F3E;" vertex="1" parent="par_group">
+          <mxGeometry x="20" y="400" width="300" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="par_gpu1" value="GPU 1" style="text;html=1;align=right;fontSize=9;fontColor=#666666;" vertex="1" parent="par_group">
+          <mxGeometry x="10" y="425" width="40" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="par_tl1" value="" style="rounded=0;fillColor=#E6D0DE;strokeColor=#996185;" vertex="1" parent="par_group">
+          <mxGeometry x="55" y="425" width="180" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="par_gpu2" value="GPU 2" style="text;html=1;align=right;fontSize=9;fontColor=#666666;" vertex="1" parent="par_group">
+          <mxGeometry x="10" y="448" width="40" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="par_tl2" value="" style="rounded=0;fillColor=#E6D0DE;strokeColor=#996185;" vertex="1" parent="par_group">
+          <mxGeometry x="55" y="448" width="180" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="par_gpu3" value="GPU 3" style="text;html=1;align=right;fontSize=9;fontColor=#666666;" vertex="1" parent="par_group">
+          <mxGeometry x="10" y="471" width="40" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="par_tl3" value="" style="rounded=0;fillColor=#E6D0DE;strokeColor=#996185;" vertex="1" parent="par_group">
+          <mxGeometry x="55" y="471" width="180" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="par_gpudots" value="..." style="text;html=1;align=center;fontSize=12;fontColor=#666666;" vertex="1" parent="par_group">
+          <mxGeometry x="15" y="492" width="30" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="par_gpuN" value="GPU N" style="text;html=1;align=right;fontSize=9;fontColor=#666666;" vertex="1" parent="par_group">
+          <mxGeometry x="10" y="512" width="40" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="par_tlN" value="" style="rounded=0;fillColor=#E6D0DE;strokeColor=#996185;" vertex="1" parent="par_group">
+          <mxGeometry x="55" y="512" width="180" height="18" as="geometry" />
+        </mxCell>
+
+        <mxCell id="par_idle_label" value="&lt;font style=&quot;font-size:9px&quot;&gt;← 5 min burst →&lt;br&gt;then all terminate&lt;/font&gt;" style="text;html=1;align=left;fontColor=#CC0000;" vertex="1" parent="par_group">
+          <mxGeometry x="245" y="460" width="120" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="par_stats" value="&lt;font style=&quot;font-size:11px&quot;&gt;&lt;b&gt;10 exp / 10 min&lt;/b&gt; | GPU utilization 100%&lt;br&gt;100 experiments = &lt;b&gt;~100 min&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;fillColor=#D5E8D4;strokeColor=#82B366;rounded=1;fontSize=11;" vertex="1" parent="par_group">
+          <mxGeometry x="100" y="580" width="300" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- HUGI callout -->
+        <mxCell id="hugi_box" value="&lt;font color=&quot;#CC0000&quot;&gt;&lt;b&gt;HUGI Pattern&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;&lt;b&gt;Hurry Up&lt;/b&gt;: Burst N GPUs simultaneously&lt;br&gt;&lt;b&gt;Get Idle&lt;/b&gt;: Terminate all → $0 when done&lt;br&gt;Same cost, 4.8x faster&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;dashed=1;" vertex="1" parent="par_group">
+          <mxGeometry x="300" y="430" width="240" height="80" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
