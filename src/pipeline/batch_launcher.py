@@ -110,19 +110,42 @@ def launch_batch(
         )
 
         # 비동기 제출 (wait=False) → 모든 Job이 동시에 실행
-        estimator.fit(
-            inputs={
-                "data": s3_data,
-                "tokenizer": s3_tokenizer,
-            },
-            job_name=job_name,
-            wait=False,
-            logs=False,
-        )
+        # ResourceLimitExceeded 발생 시 대기 후 재시도
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:
+                estimator.fit(
+                    inputs={
+                        "data": s3_data,
+                        "tokenizer": s3_tokenizer,
+                    },
+                    job_name=job_name if attempt == 0 else f"{job_name}-r{attempt}",
+                    wait=False,
+                    logs=False,
+                )
+                break
+            except Exception as e:
+                if "ResourceLimitExceeded" in str(e) and attempt < max_retries - 1:
+                    wait_sec = 60 * (attempt + 1)
+                    print(f"  Quota exceeded, waiting {wait_sec}s for slots to free up... "
+                          f"(retry {attempt+1}/{max_retries})")
+                    time.sleep(wait_sec)
+                else:
+                    print(f"  FAILED: {e}")
+                    jobs.append({
+                        "candidate_id": cid,
+                        "job_name": job_name,
+                        "status": "submit_failed",
+                        "description": candidate.get("description", ""),
+                    })
+                    break
+        else:
+            continue
 
+        actual_job_name = job_name if attempt == 0 else f"{job_name}-r{attempt}"
         jobs.append({
             "candidate_id": cid,
-            "job_name": job_name,
+            "job_name": actual_job_name,
             "status": "submitted",
             "description": candidate.get("description", ""),
             "estimator": estimator,
