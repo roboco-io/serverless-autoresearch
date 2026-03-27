@@ -135,8 +135,11 @@ serverless-autoresearch/
 │   └── cost_report.py          # Cost reporting
 │
 ├── docs/
-│   ├── architecture.drawio     # Architecture diagram
-│   └── comparison-report.md    # Original vs serverless comparison
+│   ├── architecture.drawio     # Architecture diagram (editable)
+│   ├── architecture.svg        # Architecture diagram (rendered)
+│   ├── comparison-report.md    # Original vs serverless comparison
+│   ├── comparison-diagrams.*   # Sequential vs parallel diagrams
+│   └── gpu-cost-analysis.md    # P5 vs P6 GPU cost/performance analysis
 │
 └── generations/                # Per-generation candidates & results
     └── gen_000/
@@ -191,6 +194,15 @@ python -m pipeline.orchestrator --generations 10 --population 10
 
 After completion, analyze results.tsv and summarize findings.
 ```
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Comparison Report](docs/comparison-report.md) | Original sequential vs serverless parallel pipeline — architecture, cost, search efficiency |
+| [GPU Cost Analysis](docs/gpu-cost-analysis.md) | P5 (H100) vs P6 (B200/B300) pricing and performance for autoresearch workloads |
+| [Architecture Diagram](docs/architecture.svg) | System architecture (SageMaker + S3 + local orchestrator) |
+| [Sequential vs Parallel](docs/comparison-diagrams.svg) | Visual comparison of sequential and parallel experiment pipelines |
 
 ## Credits
 
