@@ -1,8 +1,20 @@
 # Serverless Autoresearch
 
-> Run Karpathy's [autoresearch](https://github.com/karpathy/autoresearch) as a **parallel evolution pipeline** on SageMaker Managed Spot Training.
+> Experimenting with cost-effective ways to run Karpathy's [autoresearch](https://github.com/karpathy/autoresearch) on AWS infrastructure, and documenting the journey as a hands-on tutorial.
 
-The original autoresearch runs experiments sequentially on a single GPU — 12 experiments/hour, ~8 hours for 100 experiments. This project leverages cloud horizontal scaling and the **HUGI (Hurry Up and Get Idle)** pattern to complete **100 experiments in ~100 minutes at the same cost (~$4)** with zero GPU idle time.
+## What is this?
+
+This project explores how to run **autonomous AI-driven ML research** (autoresearch) on AWS as cost-effectively as possible. We experiment with different GPU instances, spot pricing strategies, and parallel execution patterns — then turn every experiment into a step-by-step tutorial that others can follow.
+
+### Goals
+
+1. **Cost optimization** — Find the most cost-effective GPU instance and pricing model for autoresearch on AWS (Spot, On-Demand, Capacity Blocks)
+2. **Performance maximization** — Squeeze maximum val_bpb improvement from each dollar spent, using parallel evolution and cloud-native patterns
+3. **Tutorial creation** — Document every experiment with reproducible steps, cost breakdowns, and lessons learned so anyone can replicate the results
+
+### Approach
+
+The original autoresearch runs experiments sequentially on a single GPU — 12 experiments/hour, ~8 hours for 100 experiments. We built a **parallel evolution pipeline** on SageMaker Managed Spot Training that leverages the **HUGI (Hurry Up and Get Idle)** pattern to complete **100 experiments in ~100 minutes at the same cost (~$4)** with zero GPU idle time.
 
 ## Architecture
 
@@ -189,6 +201,14 @@ python -m pipeline.orchestrator --generations 10 --population 10
 
 After completion, analyze results.tsv and summarize findings.
 ```
+
+## Experiments & Tutorials
+
+| # | Experiment | GPU | val_bpb | Cost | Key Finding |
+|---|-----------|-----|---------|------|-------------|
+| [001](experiments/001-baseline-l40s/report.md) | Baseline on L40S | ml.g7e.4xlarge | 1.065 | $0.04 | Pipeline validated, SDPA fallback works |
+| 002 | L40S Optimization | ml.g7e.4xlarge | _TBD_ | _TBD_ | [Research notes](references/l40s-optimization-strategies.md) |
+| 003 | H100 Fair Comparison | ml.p5.4xlarge | _TBD_ | _TBD_ | Pending quota approval |
 
 ## Documentation
 
