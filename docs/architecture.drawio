@@ -1,0 +1,189 @@
+<mxfile host="app.diagrams.net" modified="2026-03-27T00:00:00.000Z" agent="Claude" version="24.0.0" type="device">
+  <diagram id="diagram-1" name="Architecture">
+    <mxGraphModel dx="1422" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="&lt;b&gt;Serverless Autoresearch — Parallel Evolution Pipeline&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=18;fontColor=#232F3E;" vertex="1" parent="1">
+          <mxGeometry x="360" y="10" width="480" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ========== LOCAL (macOS) ========== -->
+        <mxCell id="local_group" value="&lt;b&gt;Local Orchestrator (macOS)&lt;/b&gt;" style="fillColor=#FFF2CC;strokeColor=#D6B656;rounded=1;verticalAlign=top;fontStyle=1;fontColor=#6D4C00;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="30" y="70" width="350" height="780" as="geometry" />
+        </mxCell>
+
+        <!-- OMC Autopilot -->
+        <mxCell id="omc" value="OMC Autopilot" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontStyle=1;fontSize=12;" vertex="1" parent="local_group">
+          <mxGeometry x="100" y="40" width="150" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Generation Loop -->
+        <mxCell id="loop_group" value="Generation Loop" style="fillColor=none;strokeColor=#6C8EBF;dashed=1;verticalAlign=top;fontStyle=1;fontColor=#6C8EBF;rounded=1;" vertex="1" parent="local_group">
+          <mxGeometry x="20" y="110" width="310" height="640" as="geometry" />
+        </mxCell>
+
+        <!-- Step 1: Candidate Generator -->
+        <mxCell id="gen" value="&lt;b&gt;1. Candidate Generator&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;N=10 train.py variants&lt;br&gt;Conservative(3) + Moderate(4)&lt;br&gt;+ Aggressive(2) + Crossover(1)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="loop_group">
+          <mxGeometry x="30" y="35" width="250" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Step 2: Batch Launcher -->
+        <mxCell id="launcher" value="&lt;b&gt;2. Batch Launcher&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;N jobs submitted in parallel&lt;br&gt;wait=False (async)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="loop_group">
+          <mxGeometry x="30" y="145" width="250" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Step 3: Result Collector -->
+        <mxCell id="collector" value="&lt;b&gt;3. Result Collector&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Poll all jobs, aggregate results&lt;br&gt;CloudWatch + S3&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="loop_group">
+          <mxGeometry x="30" y="385" width="250" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Step 4: Selection -->
+        <mxCell id="selection" value="&lt;b&gt;4. Selection&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Best val_bpb → new baseline&lt;br&gt;git commit + tag&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=11;" vertex="1" parent="loop_group">
+          <mxGeometry x="30" y="475" width="250" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- results.tsv -->
+        <mxCell id="results" value="&lt;b&gt;results.tsv&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Experiment log&lt;/font&gt;" style="shape=document;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" vertex="1" parent="loop_group">
+          <mxGeometry x="80" y="565" width="150" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Loop arrows -->
+        <mxCell id="e_omc_gen" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" source="omc" target="gen" parent="local_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_gen_launch" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" source="gen" target="launcher" parent="loop_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_collect_select" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" source="collector" target="selection" parent="loop_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_select_results" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" source="selection" target="results" parent="loop_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Loop back arrow -->
+        <mxCell id="e_loop_back" value="&lt;font style=&quot;font-size:10px&quot;&gt;Next Generation&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#82B366;exitX=1;exitY=0.5;entryX=1;entryY=0.5;curved=1;" edge="1" source="selection" target="gen" parent="loop_group">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="295" y="505" />
+              <mxPoint x="295" y="75" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ========== AWS CLOUD ========== -->
+        <mxCell id="aws_cloud" value="&lt;b&gt;AWS Cloud (ap-northeast-1 / Tokyo)&lt;/b&gt;" style="fillColor=none;strokeColor=#232F3E;dashed=1;verticalAlign=top;fontStyle=0;fontColor=#232F3E;rounded=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="430" y="70" width="930" height="780" as="geometry" />
+        </mxCell>
+
+        <!-- SageMaker Group -->
+        <mxCell id="sm_group" value="&lt;b&gt;SageMaker Managed Spot Training&lt;/b&gt;" style="fillColor=none;strokeColor=#01A88D;dashed=1;verticalAlign=top;fontStyle=0;fontColor=#01A88D;rounded=1;fontSize=12;" vertex="1" parent="aws_cloud">
+          <mxGeometry x="20" y="50" width="540" height="500" as="geometry" />
+        </mxCell>
+
+        <!-- SageMaker Icon -->
+        <mxCell id="sm_icon" value="SageMaker" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=#4AB29A;gradientDirection=north;fillColor=#01A88D;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sagemaker;" vertex="1" parent="sm_group">
+          <mxGeometry x="20" y="30" width="48" height="48" as="geometry" />
+        </mxCell>
+
+        <!-- Parallel Jobs -->
+        <mxCell id="job1" value="&lt;b&gt;Job 1&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;H100 (ml.p5.4xlarge)&lt;br&gt;Spot — 5min&lt;br&gt;train_v01.py&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6D0DE;strokeColor=#996185;fontSize=10;" vertex="1" parent="sm_group">
+          <mxGeometry x="30" y="110" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="job2" value="&lt;b&gt;Job 2&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;H100 (ml.p5.4xlarge)&lt;br&gt;Spot — 5min&lt;br&gt;train_v02.py&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6D0DE;strokeColor=#996185;fontSize=10;" vertex="1" parent="sm_group">
+          <mxGeometry x="200" y="110" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="job3" value="&lt;b&gt;...&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;&lt;br&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontSize=10;dashed=1;" vertex="1" parent="sm_group">
+          <mxGeometry x="370" y="130" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="jobN" value="&lt;b&gt;Job N&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;H100 (ml.p5.4xlarge)&lt;br&gt;Spot — 5min&lt;br&gt;train_v10.py&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6D0DE;strokeColor=#996185;fontSize=10;" vertex="1" parent="sm_group">
+          <mxGeometry x="30" y="220" width="140" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- HUGI Label -->
+        <mxCell id="hugi" value="&lt;font color=&quot;#CC0000&quot;&gt;&lt;b&gt;HUGI Pattern&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Hurry Up → 5min burst&lt;br&gt;Get Idle → 0 cost&lt;/font&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="sm_group">
+          <mxGeometry x="200" y="240" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Results flow -->
+        <mxCell id="results_box" value="&lt;b&gt;Results&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;val_bpb: 0.991 ✓&lt;br&gt;val_bpb: 1.002 ✗&lt;br&gt;val_bpb: CRASH ✗&lt;br&gt;...&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=11;" vertex="1" parent="sm_group">
+          <mxGeometry x="130" y="350" width="160" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Job to results arrows -->
+        <mxCell id="e_j1_res" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#996185;" edge="1" source="job1" target="results_box" parent="sm_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_j2_res" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#996185;" edge="1" source="job2" target="results_box" parent="sm_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_jN_res" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#996185;" edge="1" source="jobN" target="results_box" parent="sm_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ========== S3 ========== -->
+        <mxCell id="s3_group" value="&lt;b&gt;Amazon S3&lt;/b&gt;" style="fillColor=none;strokeColor=#3F8624;dashed=1;verticalAlign=top;fontStyle=0;fontColor=#3F8624;rounded=1;fontSize=12;" vertex="1" parent="aws_cloud">
+          <mxGeometry x="610" y="50" width="290" height="340" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s3_icon" value="S3" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=#60A337;gradientDirection=north;fillColor=#3F8624;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" vertex="1" parent="s3_group">
+          <mxGeometry x="20" y="30" width="48" height="48" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s3_data" value="&lt;b&gt;/data/&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Training shards&lt;br&gt;(parquet)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=11;" vertex="1" parent="s3_group">
+          <mxGeometry x="30" y="100" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_tok" value="&lt;b&gt;/tokenizer/&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;BPE tokenizer&lt;br&gt;+ token_bytes&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=11;" vertex="1" parent="s3_group">
+          <mxGeometry x="30" y="180" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_output" value="&lt;b&gt;/output/&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;results.json&lt;br&gt;per generation&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=11;" vertex="1" parent="s3_group">
+          <mxGeometry x="30" y="260" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- CloudWatch -->
+        <mxCell id="cw" value="CloudWatch" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=#FF4FA2;gradientDirection=north;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudwatch;" vertex="1" parent="aws_cloud">
+          <mxGeometry x="700" y="440" width="60" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- IAM -->
+        <mxCell id="iam" value="IAM Role" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=#FF6680;gradientDirection=north;fillColor=#DD344C;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.iam;" vertex="1" parent="aws_cloud">
+          <mxGeometry x="810" y="440" width="60" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- ========== CROSS-GROUP EDGES ========== -->
+        <!-- Launcher → SageMaker -->
+        <mxCell id="e_launch_sm" value="&lt;font style=&quot;font-size:10px&quot;&gt;submit N jobs&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#01A88D;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.3;" edge="1" source="launcher" target="sm_group" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- SageMaker Results → Collector -->
+        <mxCell id="e_sm_collect" value="&lt;font style=&quot;font-size:10px&quot;&gt;fetch results&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#D6B656;strokeWidth=2;exitX=0;exitY=0.8;entryX=1;entryY=0.5;" edge="1" source="sm_group" target="collector" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- SageMaker → S3 data -->
+        <mxCell id="e_sm_s3" value="&lt;font style=&quot;font-size:10px&quot;&gt;read data&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#3F8624;dashed=1;" edge="1" source="sm_group" target="s3_data" parent="aws_cloud">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- SageMaker → S3 output -->
+        <mxCell id="e_sm_s3out" value="&lt;font style=&quot;font-size:10px&quot;&gt;write results&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#3F8624;dashed=1;" edge="1" source="results_box" target="s3_output" parent="aws_cloud">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- SageMaker → CloudWatch -->
+        <mxCell id="e_sm_cw" value="&lt;font style=&quot;font-size:10px&quot;&gt;metrics&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#E7157B;dashed=1;" edge="1" source="sm_group" target="cw" parent="aws_cloud">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ========== METRICS BOX ========== -->
+        <mxCell id="metrics" value="&lt;b&gt;Key Metrics&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;100 experiments in ~100 min&lt;br&gt;10x parallel per generation&lt;br&gt;~$4 total (Spot pricing)&lt;br&gt;0 GPU idle time (HUGI)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6D0DE;strokeColor=#996185;fontSize=11;fontColor=#232F3E;" vertex="1" parent="aws_cloud">
+          <mxGeometry x="600" y="600" width="280" height="100" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
