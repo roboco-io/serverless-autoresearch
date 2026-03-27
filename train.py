@@ -467,7 +467,7 @@ FINAL_LR_FRAC = 0.0     # final LR as fraction of initial
 
 # Model size
 DEPTH = 8               # number of transformer layers
-DEVICE_BATCH_SIZE = 128  # per-device batch size (L40S 48GB — 22.8GB used at 64, room to double)
+DEVICE_BATCH_SIZE = 64   # per-device batch size (64 outperformed 128 in exp #002)
 
 # ---------------------------------------------------------------------------
 # Setup: tokenizer, model, optimizer, dataloader
