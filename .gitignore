@@ -12,6 +12,14 @@ results.tsv
 run.log
 *.png
 
+# Data (stored in S3, not git)
+data/raw/*.parquet
+data/interim/
+data/processed/
+
+# Models
+models/
+
 # Upstream reference (submodule or separate clone)
 upstream-autoresearch/
 

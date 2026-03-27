@@ -47,7 +47,7 @@ def update_baseline(
 ) -> None:
     """최적 후보의 train.py를 프로젝트 루트로 복사하고 git 커밋."""
     if project_root is None:
-        project_root = Path(__file__).parent.parent
+        project_root = Path(__file__).parent.parent.parent
 
     if not best.get("improved", False):
         print(f"Generation {generation}: No improvement (best={best.get('val_bpb', 'N/A')}). "
@@ -98,7 +98,7 @@ def log_results_tsv(
 ) -> None:
     """results.tsv에 세대 결과를 추가."""
     if tsv_path is None:
-        tsv_path = Path(__file__).parent.parent / "results.tsv"
+        tsv_path = Path(__file__).parent.parent.parent / "results.tsv"
 
     # 헤더 생성 (파일이 없으면)
     if not tsv_path.exists():

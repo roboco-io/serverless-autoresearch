@@ -13,13 +13,13 @@ from pathlib import Path
 import click
 import yaml
 
-from pipeline.candidate_generator import generate_candidates
-from pipeline.batch_launcher import launch_batch
-from pipeline.result_collector import collect_results, save_generation_results
-from pipeline.selection import select_best, update_baseline, log_results_tsv
+from src.pipeline.candidate_generator import generate_candidates
+from src.pipeline.batch_launcher import launch_batch
+from src.pipeline.result_collector import collect_results, save_generation_results
+from src.pipeline.selection import select_best, update_baseline, log_results_tsv
 
 
-PROJECT_ROOT = Path(__file__).parent.parent
+PROJECT_ROOT = Path(__file__).parent.parent.parent
 
 
 def load_config(config_path: Path = None) -> dict:

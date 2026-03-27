@@ -153,7 +153,7 @@ def save_generation_results(
 ) -> Path:
     """세대 결과를 로컬 파일로 저장."""
     if output_dir is None:
-        output_dir = Path(__file__).parent.parent / "generations" / f"gen_{generation:03d}"
+        output_dir = Path(__file__).parent.parent.parent / "generations" / f"gen_{generation:03d}"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # estimator 객체 제거 (직렬화 불가)

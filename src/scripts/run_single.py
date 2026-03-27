@@ -12,11 +12,11 @@ import click
 import yaml
 
 # 프로젝트 루트를 path에 추가
-PROJECT_ROOT = Path(__file__).parent.parent
+PROJECT_ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from pipeline.batch_launcher import launch_batch, get_session
-from pipeline.result_collector import collect_results
+from src.pipeline.batch_launcher import launch_batch, get_session
+from src.pipeline.result_collector import collect_results
 
 
 @click.command()

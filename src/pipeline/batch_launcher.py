@@ -144,7 +144,7 @@ def _prepare_source_dir(train_py_path: str, generation: int, candidate_id: str) 
     각 후보의 train.py + 공유 파일(prepare.py, sagemaker 래퍼)을 임시 디렉토리에 복사.
     """
     import shutil
-    project_root = Path(__file__).parent.parent
+    project_root = Path(__file__).parent.parent.parent
     source_dir = project_root / "generations" / f"gen_{generation:03d}" / "source" / candidate_id
     source_dir.mkdir(parents=True, exist_ok=True)
 
@@ -152,8 +152,8 @@ def _prepare_source_dir(train_py_path: str, generation: int, candidate_id: str) 
     shutil.copy2(train_py_path, source_dir / "train.py")
     # 공유 파일 복사
     shutil.copy2(project_root / "prepare.py", source_dir / "prepare.py")
-    shutil.copy2(project_root / "sagemaker" / "entry_point.py", source_dir / "entry_point.py")
-    shutil.copy2(project_root / "sagemaker" / "train_wrapper.py", source_dir / "train_wrapper.py")
+    shutil.copy2(project_root / "src" / "sagemaker" / "entry_point.py", source_dir / "entry_point.py")
+    shutil.copy2(project_root / "src" / "sagemaker" / "train_wrapper.py", source_dir / "train_wrapper.py")
     # requirements.txt (SageMaker DLC가 자동 설치)
     shutil.copy2(project_root / "infrastructure" / "requirements-train.txt",
                  source_dir / "requirements.txt")

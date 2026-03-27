@@ -14,7 +14,7 @@ import yaml
 import boto3
 
 
-PROJECT_ROOT = Path(__file__).parent.parent
+PROJECT_ROOT = Path(__file__).parent.parent.parent
 CACHE_DIR = Path.home() / ".cache" / "autoresearch"
 
 

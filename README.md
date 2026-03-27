@@ -54,7 +54,7 @@ pip install boto3 sagemaker pyyaml click
 ### 2. Prepare Data (one-time, ~5 min)
 
 ```bash
-python scripts/prepare_s3.py --num-shards 10
+make prepare
 ```
 
 Downloads 10 training shards + validation shard from HuggingFace, trains BPE tokenizer, uploads everything to S3.
@@ -62,17 +62,17 @@ Downloads 10 training shards + validation shard from HuggingFace, trains BPE tok
 ### 3. Verify Setup
 
 ```bash
-python -m pipeline.orchestrator --dry-run
+make dry-run
 ```
 
 ### 4. Run Experiments
 
 ```bash
-# Single generation test (~$0.40, ~10 min)
-python -m pipeline.orchestrator --single --population 10
+# Single experiment test (~$0.04, ~10 min)
+make run-single
 
 # Full pipeline (~$4, ~100 min)
-python -m pipeline.orchestrator --generations 10 --population 10
+make run
 ```
 
 ## How It Works
@@ -110,41 +110,36 @@ Each generation follows 4 steps:
 serverless-autoresearch/
 ├── train.py                    # Training script (agent modifies this)
 ├── prepare.py                  # Data prep + evaluation (read-only)
-├── config.yaml                 # AWS & pipeline configuration
+├── config.yaml                 # AWS & pipeline config (gitignored)
+├── config.yaml.example         # Config template
 ├── program.md                  # Agent instructions
+├── Makefile                    # make run, make dry-run, make cost, etc.
 │
-├── pipeline/                   # Core pipeline
-│   ├── orchestrator.py         # Main evolution loop
-│   ├── candidate_generator.py  # Generate N train.py variants
-│   ├── batch_launcher.py       # Submit N SageMaker jobs in parallel
-│   ├── result_collector.py     # Collect & aggregate results
-│   └── selection.py            # Select best, manage git state
+├── src/                        # Source code (cookiecutter-style)
+│   ├── pipeline/               # Core evolution pipeline
+│   │   ├── orchestrator.py     # Main evolution loop
+│   │   ├── candidate_generator.py
+│   │   ├── batch_launcher.py
+│   │   ├── result_collector.py
+│   │   └── selection.py
+│   ├── sagemaker/              # SageMaker wrappers
+│   │   ├── entry_point.py
+│   │   └── train_wrapper.py
+│   └── scripts/                # CLI utilities
+│       ├── prepare_s3.py
+│       ├── run_single.py
+│       └── cost_report.py
 │
-├── sagemaker/                  # SageMaker wrappers
-│   ├── entry_point.py          # Training job entry point
-│   └── train_wrapper.py        # Executes train.py, parses results
-│
-├── infrastructure/             # AWS infrastructure
-│   ├── setup_iam.sh            # IAM role creation
-│   ├── Dockerfile              # Custom container (optional)
-│   └── requirements-train.txt  # Training dependencies
-│
-├── scripts/                    # Utilities
-│   ├── prepare_s3.py           # One-time: data prep + S3 upload
-│   ├── run_single.py           # Debug: run single experiment
-│   └── cost_report.py          # Cost reporting
-│
-├── docs/
-│   ├── architecture.drawio     # Architecture diagram (editable)
-│   ├── architecture.svg        # Architecture diagram (rendered)
-│   ├── comparison-report.md    # Original vs serverless comparison
-│   ├── comparison-diagrams.*   # Sequential vs parallel diagrams
-│   └── gpu-cost-analysis.md    # P5 vs P6 GPU cost/performance analysis
-│
-└── generations/                # Per-generation candidates & results
-    └── gen_000/
-        ├── candidates/         # train_v01.py ~ train_v10.py
-        └── results.json
+├── data/raw/                   # Data references (actual data in S3)
+├── models/                     # Trained model artifacts
+├── notebooks/                  # Jupyter notebooks (analysis)
+├── references/                 # Research notes & external references
+├── experiments/                # Per-experiment reports & results
+│   ├── 001-baseline-l40s/
+│   └── 002-optimization-l40s/
+├── docs/                       # Project documentation & diagrams
+├── infrastructure/             # AWS IAM, Dockerfile, requirements
+└── generations/                # Pipeline output (per-generation)
 ```
 
 ## Configuration

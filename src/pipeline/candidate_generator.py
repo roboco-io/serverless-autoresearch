@@ -50,7 +50,7 @@ def generate_candidates(
         후보 목록: [{"id": "v01", "train_py_path": "...", "description": "..."}]
     """
     pipe_cfg = config["pipeline"]
-    output_dir = Path(__file__).parent.parent / "generations" / f"gen_{generation:03d}" / "candidates"
+    output_dir = Path(__file__).parent.parent.parent / "generations" / f"gen_{generation:03d}" / "candidates"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     base_code = base_train_py.read_text()
