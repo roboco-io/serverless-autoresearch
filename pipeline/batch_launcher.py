@@ -106,6 +106,7 @@ def launch_batch(
             environment={
                 "SM_CACHE_DIR": "/opt/ml/input/data",
             },
+            disable_profiler=True,
         )
 
         # 비동기 제출 (wait=False) → 모든 Job이 동시에 실행
