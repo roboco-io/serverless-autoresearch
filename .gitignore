@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+*.egg-info
+.venv/
+
+# Experiment artifacts
+generations/
+results.tsv
+run.log
+*.png
+
+# Upstream reference (submodule or separate clone)
+upstream-autoresearch/
+
+# AWS/SageMaker
+sagemaker_jobs.json
+
+# OMC state
+.omc/
+
+# IDE
+.claude/
+.idea/
+.vscode/
+
+# OS
+.DS_Store
