@@ -1,0 +1,36 @@
+aws:
+  profile: default
+  region: ap-northeast-1          # Tokyo (H100 Spot available)
+  # SageMaker execution role ARN (created by infrastructure/setup_iam.sh)
+  role_arn: "arn:aws:iam::YOUR_ACCOUNT_ID:role/SageMakerAutoresearchRole"
+
+sagemaker:
+  instance_type: ml.p5.4xlarge    # H100 80GB (Hopper) — same as original
+  use_spot: true
+  max_run: 900                    # 15 min (5 min training + 10 min overhead)
+  max_wait: 3600                  # 1 hour spot wait (H100 competition)
+  framework_version: "2.8.0"      # SageMaker PyTorch DLC
+  py_version: "py312"
+
+s3:
+  # Leave empty to use SageMaker default bucket
+  bucket: ""
+  data_prefix: autoresearch/data
+  tokenizer_prefix: autoresearch/tokenizer
+  output_prefix: autoresearch/output
+
+pipeline:
+  num_generations: 10            # Total generations
+  population_size: 10            # Candidates per generation
+  # Candidate diversity allocation
+  num_conservative: 3            # Hyperparameter fine-tuning
+  num_moderate: 4                # Architecture changes
+  num_aggressive: 2              # Radical changes
+  num_crossover: 1               # Combine top-2 ideas
+
+# H100 (80GB VRAM) default model settings
+model_defaults:
+  depth: 8
+  device_batch_size: 128
+  total_batch_size: 524288       # 2^19
+  window_pattern: "SSSL"

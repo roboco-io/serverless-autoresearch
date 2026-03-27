@@ -16,6 +16,7 @@ run.log
 upstream-autoresearch/
 
 # AWS/SageMaker
+config.yaml
 sagemaker_jobs.json
 
 # OMC state
