@@ -235,10 +235,23 @@ Our experience:
 
 See [Spot Capacity Guide](docs/spot-capacity-guide.md) for the full guide including price history checks and quota management.
 
+## Key Insights
+
+Lessons learned from running 20+ experiments on SageMaker Spot. Full list: **[docs/insights.md](docs/insights.md)**
+
+| # | Insight | Impact |
+|---|---------|--------|
+| 1 | Spot capacity varies 1-9 by region — always check placement scores first | Saves 30+ min of stuck jobs |
+| 3 | `DEVICE_BATCH_SIZE ≠ token throughput` — increase `TOTAL_BATCH_SIZE` instead | Avoided wrong optimization path |
+| 4 | Flash Attention 3 is Hopper-only; L40S needs FA2 or SDPA fallback | MFU 20% vs 40% |
+| 5 | SageMaker startup overhead is 3 min per job (60% for 5-min training) | Scale up > scale out |
+| 11 | **Spot GPUs are valid proxies for large-scale training** — architecture/optimizer rankings transfer, absolute LR/batch size don't | Cheap experiments ($0.04) inform expensive production runs |
+
 ## Documentation
 
 | Document | Description |
 |----------|-------------|
+| [Key Insights](docs/insights.md) | Battle-tested lessons from SageMaker Spot experiments (continuously updated) |
 | [Comparison Report](docs/comparison-report.md) | Original sequential vs serverless parallel pipeline — architecture, cost, search efficiency |
 | [GPU Cost Analysis](docs/gpu-cost-analysis.md) | P5 (H100) vs P6 (B200/B300) pricing and performance for autoresearch workloads |
 | [Spot Capacity Guide](docs/spot-capacity-guide.md) | How to find available Spot capacity by region before running experiments |

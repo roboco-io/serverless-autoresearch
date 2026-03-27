@@ -73,3 +73,32 @@
 **Discovery:** config.yaml contains AWS role ARN, profile, and region — environment-specific and potentially sensitive.
 
 **Rule:** Gitignore config.yaml, provide config.yaml.example as template.
+
+## 11. Spot GPUs Are Valid Proxies for Large-Scale Training
+
+**Discovery:** Research confirms that hyperparameter optimization on cheaper GPUs (L40S) transfers well to expensive GPUs (H100) for production training.
+
+**What transfers:**
+- Optimizer choices (Muon vs AdamW) — relative rankings hold across hardware
+- Architecture decisions (depth, width, attention patterns) — hardware-independent
+- LR schedule shapes (cosine, warmup ratios) — direction transfers, absolute values need adjustment
+- Relative hyperparameter rankings — "A is better than B" conclusions are portable
+
+**What doesn't transfer:**
+- Absolute val_bpb values — depend on GPU throughput
+- Optimal batch sizes — depend on VRAM (48GB vs 80GB)
+- Memory-dependent optimizations — FA3 (Hopper only), FP8, etc.
+- Absolute learning rate values — need per-scale tuning without muP
+
+**Rule:** Use Spot for Phase 1 (hypothesis validation at $0.04/experiment), then apply winning architecture/optimizer choices to Phase 2 (full-scale training on H100). Use muP for direct LR transfer across scales.
+
+**References:**
+- [MLPerf BERT HPC Optimization (arXiv 2402.02447)](https://arxiv.org/pdf/2402.02447)
+- [Improving HPO with Checkpointed Weights (NVIDIA 2024)](https://research.nvidia.com/publication/2024-06_improving-hyperparameter-optimization-checkpointed-model-weights)
+- [muP Scaling (arXiv 2410.22854)](https://arxiv.org/html/2410.22854v3)
+
+## 12. DEVICE_BATCH_SIZE ≠ More Training
+
+**Discovery (Experiment #002):** Doubling DEVICE_BATCH_SIZE from 64 to 128 while keeping TOTAL_BATCH_SIZE=2^19 **worsened** val_bpb (1.065 → 1.081). It only reduced gradient accumulation steps (4 → 2) without increasing total tokens.
+
+**Rule:** To increase throughput, increase TOTAL_BATCH_SIZE. DEVICE_BATCH_SIZE only affects VRAM usage and gradient accumulation granularity.
