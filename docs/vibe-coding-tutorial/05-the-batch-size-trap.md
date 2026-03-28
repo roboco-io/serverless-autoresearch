@@ -11,6 +11,7 @@ Experiment #001 showed only 47% VRAM utilization (22.8GB / 48GB). The obvious op
 ```
 이제 두번째 실험을 autoresearch로 시작해줘.
 ```
+> *Translation: "Now start the second experiment with autoresearch."*
 
 The pipeline was configured with DEVICE_BATCH_SIZE=128 and submitted 4 parallel candidates.
 

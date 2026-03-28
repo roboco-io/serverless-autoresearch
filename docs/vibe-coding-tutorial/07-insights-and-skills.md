@@ -13,6 +13,7 @@ With experiments complete, we had accumulated hard-won knowledge about SageMaker
 ```
 지금까지 진행상황에서 얻어진 인사이트를 문서화 한 다음 공식 문서에 따라서 스킬화 해줘.
 ```
+> *Translation: "Document the insights gained from the progress so far, then turn them into a skill following the official documentation."*
 
 12 insights were documented, from "Spot capacity varies 1-9 by region" to "DEVICE_BATCH_SIZE ≠ token throughput."
 
@@ -20,6 +21,7 @@ With experiments complete, we had accumulated hard-won knowledge about SageMaker
 ```
 스킬이 인사이트 문서를 계속 참조하고, 이터레이션마다 업데이트 할 수 있도록 해줘.
 ```
+> *Translation: "Make the skill continuously reference the insights document and be updatable after each iteration."*
 
 Created a Claude Code skill (`sagemaker-spot-training`) with symlinked references — when insights are updated, the skill automatically reflects the latest findings.
 
@@ -27,6 +29,7 @@ Created a Claude Code skill (`sagemaker-spot-training`) with symlinked reference
 ```
 스팟으로 가설들을 싼 비용으로 빠르게 검증하고 이를 바탕으로 대규모 훈련에 사용할 수 있을까?
 ```
+> *Translation: "Can we quickly validate hypotheses cheaply with Spot, and then use those findings for large-scale training?"*
 
 Research confirmed: architecture/optimizer rankings transfer across GPU types. Cheap Spot experiments ($0.04 each) can validate hypotheses for expensive H100 production runs.
 

@@ -13,6 +13,8 @@ Infrastructure ready. Time to run the first real experiment on SageMaker. What c
 ```
 ml.g7e.2xlarge 스팟이지? 테스트 해 보자.
 ```
+> *Translation: "ml.g7e.2xlarge is Spot, right? Let's test it."*
+
 **Error**: `ValidationException: Profiler is currently not supported with instance type ml.g7e.2xlarge`
 **Fix**: Added `disable_profiler=True` to the PyTorch Estimator.
 

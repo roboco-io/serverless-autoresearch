@@ -12,6 +12,7 @@ With the batch size lesson learned, it was time to let the pipeline do what auto
 이런거 계속 자동으로 반복해서 실험하는게 autoresearch아냐?
 omc autoresearch로 실험을 진행해줘.
 ```
+> *Translation: "Isn't autoresearch supposed to keep repeating experiments like this automatically? Run the experiments with omc autoresearch."*
 
 This was the turning point. Stop micromanaging, start auto-researching.
 

@@ -14,6 +14,7 @@ The AI entered plan mode and designed the complete file structure. When the user
 클라우드의 장점인 병렬 실행과 HUGI(Hurry Up and Get Idle)을 적극적으로 활용해서
 실험 시간을 단축시키면서도 높은 성과를 낼 수 있는 구조로 파이프라인을 만들어
 ```
+> *Translation: "Build the pipeline in a structure that actively leverages cloud advantages — parallel execution and HUGI (Hurry Up and Get Idle) — to shorten experiment time while achieving high performance."*
 
 This redirected the design from sequential to **parallel evolution** — a population-based approach inspired by genetic algorithms.
 

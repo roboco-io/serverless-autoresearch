@@ -15,6 +15,7 @@ The AI ran `infrastructure/setup_iam.sh` which created a SageMaker execution rol
 ```
 personal 프로필에 만든 리소스를 모두 삭제하고 roboco 프로필에 실험용 리소스를 생성해줘.
 ```
+> *Translation: "Delete all resources created in the personal profile and create experiment resources in the roboco profile."*
 
 Lesson: decide on the AWS account early.
 
@@ -24,22 +25,29 @@ This was the biggest infrastructure lesson:
 ```
 도쿄리전이 아니라 us-west-2를 사용해줘.
 ```
+> *Translation: "Use us-west-2 instead of the Tokyo region."*
+
 → Moved everything to Oregon.
 
 ```
 할당량 요청이 가능한건 p5.24xlarge 또는 p5.48xlarge 만 가능하다고 하는데 사실인지 확인해줘.
 ```
+> *Translation: "I heard that quota requests are only possible for p5.24xlarge or p5.48xlarge — verify if that's true."*
+
 → Investigated: ml.p5.4xlarge (single H100) exists but needs quota approval.
 
 ```
 웹검색이 아니라 aws cli로 spot 사용 가능한 인스턴스 타입을 us-west-2와 ap-northeast-1 에서 조사해줘
 ```
+> *Translation: "Instead of a web search, use the AWS CLI to investigate which instance types are available for Spot in us-west-2 and ap-northeast-1."*
+
 → Used `aws service-quotas list-aws-default-service-quotas` to get the definitive list.
 
 ### Quota Management
 ```
 us-west-2의 p6, G7e에 대해서도 용량 확보를 요청해줘.
 ```
+> *Translation: "Also request capacity for p6 and G7e in us-west-2."*
 
 Results:
 - g7e (L40S): **Auto-approved within minutes** ✓
@@ -50,6 +58,7 @@ Results:
 ```
 현재 스팟 풀의 상태를 조사할 수 있는 방법이 있을까?
 ```
+> *Translation: "Is there a way to investigate the current state of the Spot pool?"*
 
 The AI used Perplexity to discover `aws ec2 get-spot-placement-scores`:
 ```bash
@@ -62,6 +71,7 @@ This single command saved hours of stuck jobs.
 ```
 그래. us-east-1에 쿼터 증가 신청도 미리 해줘.
 ```
+> *Translation: "Right. Also submit a quota increase request for us-east-1 in advance."*
 
 All g7e quotas auto-approved in us-east-1. We migrated everything.
 
