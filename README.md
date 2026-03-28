@@ -263,7 +263,7 @@ See [Spot Capacity Guide](docs/spot-capacity-guide.md) for the full guide includ
 
 Follow the full journey of building this project through conversational AI coding (vibe coding):
 
-**[Vibe Coding Tutorial](docs/vibe-coding-tutorial/_index.md)** — 8 chapters from idea to autonomous ML evolution, with real prompts and debugging stories
+**[Vibe Coding Tutorial](docs/vibe-coding-tutorial/README.md)** — 8 chapters from idea to autonomous ML evolution, with real prompts and debugging stories
 
 | Chapters | Time | Cost | Key Topics |
 |----------|------|------|-----------|
