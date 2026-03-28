@@ -1,5 +1,13 @@
 # Serverless Autoresearch
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![AWS SageMaker](https://img.shields.io/badge/AWS-SageMaker%20Spot-FF9900?logo=amazonaws)](https://aws.amazon.com/sagemaker/)
+[![GPU](https://img.shields.io/badge/GPU-L40S%20%7C%20H100-76B900?logo=nvidia)](docs/gpu-cost-analysis.md)
+[![Cost](https://img.shields.io/badge/25%20experiments-%240.44-brightgreen)](experiments/)
+[![Tutorial](https://img.shields.io/badge/Tutorial-8%20chapters-blue)](docs/vibe-coding-tutorial/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Built with Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-6B48FF?logo=anthropic)](https://claude.ai/code)
+
 > Experimenting with cost-effective ways to run Karpathy's [autoresearch](https://github.com/karpathy/autoresearch) on AWS infrastructure, and documenting the journey as a hands-on tutorial.
 
 ## Why This Project?
