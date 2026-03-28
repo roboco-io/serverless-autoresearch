@@ -259,6 +259,16 @@ Our experience:
 
 See [Spot Capacity Guide](docs/spot-capacity-guide.md) for the full guide including price history checks and quota management.
 
+## Tutorial
+
+Follow the full journey of building this project through conversational AI coding (vibe coding):
+
+**[Vibe Coding Tutorial](docs/vibe-coding-tutorial/_index.md)** — 8 chapters from idea to autonomous ML evolution, with real prompts and debugging stories
+
+| Chapters | Time | Cost | Key Topics |
+|----------|------|------|-----------|
+| 8 | ~8 hours | $0.44 | Deep interview → pipeline design → SageMaker Spot → GPU debugging → autonomous evolution → insights |
+
 ## Key Insights
 
 Lessons learned from running 20+ experiments on SageMaker Spot. Full list: **[docs/insights.md](docs/insights.md)**
