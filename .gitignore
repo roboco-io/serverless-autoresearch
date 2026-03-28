@@ -30,8 +30,9 @@ sagemaker_jobs.json
 # OMC state
 .omc/
 
-# IDE
-.claude/
+# IDE (keep .claude/commands/ for project-local slash commands)
+.claude/*
+!.claude/commands/
 .idea/
 .vscode/
 

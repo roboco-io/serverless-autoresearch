@@ -83,8 +83,19 @@ The `USE_FA3` flag and `FA3_SUPPORTED` check are at the top of train.py.
 
 All `src/` modules resolve project root via `Path(__file__).parent.parent.parent` (3 levels up from `src/pipeline/` or `src/scripts/`).
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide. Key rules:
+
+- **Only `train.py` is modifiable** for experiments; `prepare.py` is read-only
+- New experiments go in `experiments/NNN-description/` with README.md
+- Run `make dry-run` before submitting PRs
+- Track and report AWS costs in every PR
+- Check [Spot Capacity Guide](docs/spot-capacity-guide.md) before choosing a region
+
 ## Current State
 
-- **Working GPU**: ml.g7e.4xlarge (L40S, us-west-2, Spot quota=4)
+- **Working GPU**: ml.g7e.2xlarge (L40S, us-east-1, Spot quota=4)
 - **Pending**: ml.p5.4xlarge (H100) quota approval for fair comparison with original
-- **Baseline**: val_bpb=1.065 on L40S with SDPA (vs 0.998 on H100 with FA3)
+- **Best val_bpb**: 1.0643 on L40S with SDPA (vs 0.998 on H100 with FA3)
+- **Total cost**: $0.44 for 25 experiments
