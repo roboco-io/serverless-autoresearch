@@ -1,0 +1,440 @@
+sagemaker.config INFO - Not applying SDK defaults from location: /opt/homebrew/share/sagemaker/config.yaml
+sagemaker.config INFO - Not applying SDK defaults from location: /Users/dohyunjung/Library/Application Support/sagemaker/config.yaml
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen000-v00-1776428200
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen000-v01-1776428200
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen000-v02-1776428200
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen000-v03-1776428200
+INFO:botocore.credentials:Found credentials in shared credentials file: ~/.aws/credentials
+INFO:botocore.credentials:Found credentials in shared credentials file: ~/.aws/credentials
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen001-v01-1776428875
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen001-v02-1776428875
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen001-v03-1776428875
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen001-v04-1776428875
+INFO:botocore.credentials:Found credentials in shared credentials file: ~/.aws/credentials
+INFO:botocore.credentials:Found credentials in shared credentials file: ~/.aws/credentials
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen002-v01-1776429551
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen002-v02-1776429551
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen002-v03-1776429551
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen002-v04-1776429551
+INFO:botocore.credentials:Found credentials in shared credentials file: ~/.aws/credentials
+INFO:botocore.credentials:Found credentials in shared credentials file: ~/.aws/credentials
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen003-v01-1776430257
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen003-v02-1776430257
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen003-v03-1776430257
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen003-v04-1776430257
+INFO:botocore.credentials:Found credentials in shared credentials file: ~/.aws/credentials
+INFO:botocore.credentials:Found credentials in shared credentials file: ~/.aws/credentials
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen004-v01-1776430963
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen004-v02-1776430963
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen004-v03-1776430963
+INFO:sagemaker.telemetry.telemetry_logging:SageMaker Python SDK will collect telemetry to help us better understand our user's needs, diagnose issues, and deliver additional features.
+To opt out of telemetry, please disable via TelemetryOptOut parameter in SDK defaults config. For more information, refer to https://sagemaker.readthedocs.io/en/stable/overview.html#configuring-and-using-defaults-with-the-sagemaker-python-sdk.
+INFO:sagemaker.image_uris:image_uri is not presented, retrieving image_uri based on instance_type, framework etc.
+INFO:sagemaker:Creating training-job with name: autoresearch-gen004-v04-1776430963
+INFO:botocore.credentials:Found credentials in shared credentials file: ~/.aws/credentials
+============================================================
+Serverless Autoresearch — Parallel Evolution Pipeline
+============================================================
+  Generations:  5
+  Population:   4
+  Instance:     ml.p5.4xlarge
+  Spot:         True
+  Dry run:      False
+
+  Estimated cost: $0.80
+
+
+============================================================
+GENERATION 000
+============================================================
+
+[1/4] Generating candidates...
+  Generated 4 candidates
+    v00: baseline (unmodified)
+    v01: conservative: UNEMBEDDING_LR 0.003369 → 0.002498
+    v02: conservative: EMBEDDING_LR 0.7091 → 0.688399
+    v03: conservative: SCALAR_LR 0.3616 → 0.402013
+
+[2/4] Launching 4 SageMaker jobs...
+
+[1/4] autoresearch-gen000-v00-1776428200
+  Candidate: v00 — baseline (unmodified)
+
+[2/4] autoresearch-gen000-v01-1776428200
+  Candidate: v01 — conservative: UNEMBEDDING_LR 0.003369 → 0.002498
+
+[3/4] autoresearch-gen000-v02-1776428200
+  Candidate: v02 — conservative: EMBEDDING_LR 0.7091 → 0.688399
+
+[4/4] autoresearch-gen000-v03-1776428200
+  Candidate: v03 — conservative: SCALAR_LR 0.3616 → 0.402013
+
+============================================================
+Generation 0: 4/4 jobs submitted
+
+[3/4] Collecting results...
+
+Waiting for 4 jobs (timeout: 1800s, poll: 30s)
+  [1s] 4 jobs still running...
+  [32s] 4 jobs still running...
+  [63s] 4 jobs still running...
+  [94s] 4 jobs still running...
+  [125s] 4 jobs still running...
+  [156s] 4 jobs still running...
+  [187s] 4 jobs still running...
+  [218s] 4 jobs still running...
+  [249s] 4 jobs still running...
+  [280s] 4 jobs still running...
+  [311s] 4 jobs still running...
+  [342s] 4 jobs still running...
+  [373s] 4 jobs still running...
+  [404s] 4 jobs still running...
+  [435s] 4 jobs still running...
+  [466s] 4 jobs still running...
+  [498s] 4 jobs still running...
+  [529s] 4 jobs still running...
+  [560s] 4 jobs still running...
+  [591s] 4 jobs still running...
+  [622s] 4 jobs still running...
+  DONE: v00 — val_bpb=1.002990961074829
+  DONE: v01 — val_bpb=1.003965973854065
+  DONE: v02 — val_bpb=1.0024579763412476
+  DONE: v03 — val_bpb=1.0049220323562622
+
+[4/4] Selecting best...
+Generation 0 results saved to /Users/dohyunjung/Workspace/roboco-io/research/serverless-autoresearch/generations/gen_000/results.json
+Generation 0: Updated baseline — val_bpb=1.002458 (delta=0.000000)
+  Git warning: fatal: 태그 'gen-000-best'이(가) 이미 있습니다
+
+  Best: v02 — val_bpb=1.0024579763412476
+
+  Generation cost: $0.072 | Total: $0.072
+  Generation time: 675s
+
+============================================================
+GENERATION 001
+============================================================
+
+[1/4] Generating candidates...
+  Generated 4 candidates
+    v01: conservative: MATRIX_LR 0.04 → 0.031318
+    v02: conservative: UNEMBEDDING_LR 0.003369 → 0.004164
+    v03: conservative: UNEMBEDDING_LR 0.003369 → 0.004206
+    v04: moderate: DEPTH 8→9
+
+[2/4] Launching 4 SageMaker jobs...
+
+[1/4] autoresearch-gen001-v01-1776428875
+  Candidate: v01 — conservative: MATRIX_LR 0.04 → 0.031318
+
+[2/4] autoresearch-gen001-v02-1776428875
+  Candidate: v02 — conservative: UNEMBEDDING_LR 0.003369 → 0.004164
+
+[3/4] autoresearch-gen001-v03-1776428875
+  Candidate: v03 — conservative: UNEMBEDDING_LR 0.003369 → 0.004206
+
+[4/4] autoresearch-gen001-v04-1776428875
+  Candidate: v04 — moderate: DEPTH 8→9
+
+============================================================
+Generation 1: 4/4 jobs submitted
+
+[3/4] Collecting results...
+
+Waiting for 4 jobs (timeout: 1800s, poll: 30s)
+  [1s] 4 jobs still running...
+  [32s] 4 jobs still running...
+  [63s] 4 jobs still running...
+  [94s] 4 jobs still running...
+  [125s] 4 jobs still running...
+  [156s] 4 jobs still running...
+  [187s] 4 jobs still running...
+  [218s] 4 jobs still running...
+  [250s] 4 jobs still running...
+  [281s] 4 jobs still running...
+  [312s] 4 jobs still running...
+  [343s] 4 jobs still running...
+  [374s] 4 jobs still running...
+  [405s] 4 jobs still running...
+  [435s] 4 jobs still running...
+  [466s] 4 jobs still running...
+  [498s] 4 jobs still running...
+  [529s] 4 jobs still running...
+  [561s] 4 jobs still running...
+  [592s] 4 jobs still running...
+  [623s] 4 jobs still running...
+  DONE: v01 — val_bpb=1.0041179656982422
+  DONE: v02 — val_bpb=1.0026259422302246
+  DONE: v03 — val_bpb=1.0018490552902222
+  DONE: v04 — val_bpb=1.0193120241165161
+
+[4/4] Selecting best...
+Generation 1 results saved to /Users/dohyunjung/Workspace/roboco-io/research/serverless-autoresearch/generations/gen_001/results.json
+Generation 1: Updated baseline — val_bpb=1.001849 (delta=0.000609)
+  Git: committed and tagged as gen-001-best
+  Best: v03 — val_bpb=1.0018490552902222
+
+  Generation cost: $0.073 | Total: $0.145
+  Generation time: 676s
+
+============================================================
+GENERATION 002
+============================================================
+
+[1/4] Generating candidates...
+  Generated 4 candidates
+    v01: conservative: UNEMBEDDING_LR 0.004206 → 0.003824
+    v02: conservative: MATRIX_LR 0.04 → 0.039682
+    v03: conservative: SCALAR_LR 0.3616 → 0.264178
+    v04: moderate: WINDOW_PATTERN SSSL→SSL
+
+[2/4] Launching 4 SageMaker jobs...
+
+[1/4] autoresearch-gen002-v01-1776429551
+  Candidate: v01 — conservative: UNEMBEDDING_LR 0.004206 → 0.003824
+
+[2/4] autoresearch-gen002-v02-1776429551
+  Candidate: v02 — conservative: MATRIX_LR 0.04 → 0.039682
+
+[3/4] autoresearch-gen002-v03-1776429551
+  Candidate: v03 — conservative: SCALAR_LR 0.3616 → 0.264178
+
+[4/4] autoresearch-gen002-v04-1776429551
+  Candidate: v04 — moderate: WINDOW_PATTERN SSSL→SSL
+
+============================================================
+Generation 2: 4/4 jobs submitted
+
+[3/4] Collecting results...
+
+Waiting for 4 jobs (timeout: 1800s, poll: 30s)
+  [1s] 4 jobs still running...
+  [32s] 4 jobs still running...
+  [63s] 4 jobs still running...
+  [94s] 4 jobs still running...
+  [125s] 4 jobs still running...
+  [156s] 4 jobs still running...
+  [187s] 4 jobs still running...
+  [218s] 4 jobs still running...
+  [249s] 4 jobs still running...
+  [280s] 4 jobs still running...
+  [311s] 4 jobs still running...
+  [342s] 4 jobs still running...
+  [373s] 4 jobs still running...
+  [404s] 4 jobs still running...
+  [435s] 4 jobs still running...
+  [466s] 4 jobs still running...
+  [498s] 4 jobs still running...
+  [529s] 4 jobs still running...
+  [560s] 4 jobs still running...
+  [591s] 4 jobs still running...
+  [622s] 4 jobs still running...
+  [653s] 4 jobs still running...
+  DONE: v01 — val_bpb=1.0022859573364258
+  DONE: v02 — val_bpb=1.002547025680542
+  DONE: v03 — val_bpb=1.003106951713562
+  DONE: v04 — val_bpb=1.0044599771499634
+
+[4/4] Selecting best...
+Generation 2 results saved to /Users/dohyunjung/Workspace/roboco-io/research/serverless-autoresearch/generations/gen_002/results.json
+  Best: v01 — val_bpb=1.0022859573364258
+
+  Generation cost: $0.074 | Total: $0.219
+  Generation time: 706s
+
+============================================================
+GENERATION 003
+============================================================
+
+[1/4] Generating candidates...
+  Generated 4 candidates
+    v01: conservative: EMBEDDING_LR 0.6884 → 0.643284
+    v02: conservative: MATRIX_LR 0.04 → 0.029848
+    v03: conservative: UNEMBEDDING_LR 0.004206 → 0.004286
+    v04: moderate: DEPTH 8→9
+
+[2/4] Launching 4 SageMaker jobs...
+
+[1/4] autoresearch-gen003-v01-1776430257
+  Candidate: v01 — conservative: EMBEDDING_LR 0.6884 → 0.643284
+
+[2/4] autoresearch-gen003-v02-1776430257
+  Candidate: v02 — conservative: MATRIX_LR 0.04 → 0.029848
+
+[3/4] autoresearch-gen003-v03-1776430257
+  Candidate: v03 — conservative: UNEMBEDDING_LR 0.004206 → 0.004286
+
+[4/4] autoresearch-gen003-v04-1776430257
+  Candidate: v04 — moderate: DEPTH 8→9
+
+============================================================
+Generation 3: 4/4 jobs submitted
+
+[3/4] Collecting results...
+
+Waiting for 4 jobs (timeout: 1800s, poll: 30s)
+  [1s] 4 jobs still running...
+  [32s] 4 jobs still running...
+  [63s] 4 jobs still running...
+  [94s] 4 jobs still running...
+  [125s] 4 jobs still running...
+  [156s] 4 jobs still running...
+  [187s] 4 jobs still running...
+  [218s] 4 jobs still running...
+  [250s] 4 jobs still running...
+  [280s] 4 jobs still running...
+  [311s] 4 jobs still running...
+  [342s] 4 jobs still running...
+  [373s] 4 jobs still running...
+  [404s] 4 jobs still running...
+  [435s] 4 jobs still running...
+  [466s] 4 jobs still running...
+  [498s] 4 jobs still running...
+  [529s] 4 jobs still running...
+  [560s] 4 jobs still running...
+  [591s] 4 jobs still running...
+  [622s] 4 jobs still running...
+  DONE: v03 — val_bpb=1.0026869773864746
+  [653s] 3 jobs still running...
+  DONE: v01 — val_bpb=1.0015859603881836
+  DONE: v02 — val_bpb=1.0028070211410522
+  DONE: v04 — val_bpb=1.0103299617767334
+
+[4/4] Selecting best...
+Generation 3 results saved to /Users/dohyunjung/Workspace/roboco-io/research/serverless-autoresearch/generations/gen_003/results.json
+Generation 3: Updated baseline — val_bpb=1.001586 (delta=0.000263)
+  Git warning: fatal: 태그 'gen-003-best'이(가) 이미 있습니다
+
+  Best: v01 — val_bpb=1.0015859603881836
+
+  Generation cost: $0.073 | Total: $0.293
+  Generation time: 706s
+
+============================================================
+GENERATION 004
+============================================================
+
+[1/4] Generating candidates...
+  Generated 4 candidates
+    v01: conservative: EMBEDDING_LR 0.6433 → 0.555008
+    v02: conservative: EMBEDDING_LR 0.6433 → 0.607861
+    v03: conservative: MATRIX_LR 0.04 → 0.030257
+    v04: moderate: DEPTH 8→9
+
+[2/4] Launching 4 SageMaker jobs...
+
+[1/4] autoresearch-gen004-v01-1776430963
+  Candidate: v01 — conservative: EMBEDDING_LR 0.6433 → 0.555008
+
+[2/4] autoresearch-gen004-v02-1776430963
+  Candidate: v02 — conservative: EMBEDDING_LR 0.6433 → 0.607861
+
+[3/4] autoresearch-gen004-v03-1776430963
+  Candidate: v03 — conservative: MATRIX_LR 0.04 → 0.030257
+
+[4/4] autoresearch-gen004-v04-1776430963
+  Candidate: v04 — moderate: DEPTH 8→9
+
+============================================================
+Generation 4: 4/4 jobs submitted
+
+[3/4] Collecting results...
+
+Waiting for 4 jobs (timeout: 1800s, poll: 30s)
+  [1s] 4 jobs still running...
+  [32s] 4 jobs still running...
+  [63s] 4 jobs still running...
+  [94s] 4 jobs still running...
+  [125s] 4 jobs still running...
+  [156s] 4 jobs still running...
+  [187s] 4 jobs still running...
+  [218s] 4 jobs still running...
+  [250s] 4 jobs still running...
+  [281s] 4 jobs still running...
+  [312s] 4 jobs still running...
+  [342s] 4 jobs still running...
+  [374s] 4 jobs still running...
+  [405s] 4 jobs still running...
+  [436s] 4 jobs still running...
+  [467s] 4 jobs still running...
+  [499s] 4 jobs still running...
+  [530s] 4 jobs still running...
+  [561s] 4 jobs still running...
+  [592s] 4 jobs still running...
+  [623s] 4 jobs still running...
+  [654s] 4 jobs still running...
+  DONE: v01 — val_bpb=1.0026530027389526
+  DONE: v02 — val_bpb=1.0025370121002197
+  DONE: v03 — val_bpb=1.0045700073242188
+  DONE: v04 — val_bpb=1.0170650482177734
+
+[4/4] Selecting best...
+Generation 4 results saved to /Users/dohyunjung/Workspace/roboco-io/research/serverless-autoresearch/generations/gen_004/results.json
+  Best: v02 — val_bpb=1.0025370121002197
+
+  Generation cost: $0.078 | Total: $0.370
+  Generation time: 707s
+
+============================================================
+PIPELINE COMPLETE
+============================================================
+  Generations: 5
+  Total experiments: 20
+  Best val_bpb: 1.001586
+  Total cost: $0.370
+  Results: /Users/dohyunjung/Workspace/roboco-io/research/serverless-autoresearch/results.tsv
