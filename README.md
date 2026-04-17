@@ -3,7 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![AWS SageMaker](https://img.shields.io/badge/AWS-SageMaker%20Spot-FF9900?logo=amazonaws)](https://aws.amazon.com/sagemaker/)
 [![GPU](https://img.shields.io/badge/GPU-L40S%20%7C%20H100-76B900?logo=nvidia)](docs/gpu-cost-analysis.md)
-[![Cost](https://img.shields.io/badge/25%20experiments-%240.44-brightgreen)](experiments/)
+[![Cost](https://img.shields.io/badge/47%20experiments-%243.78-brightgreen)](experiments/)
+[![H100 reproduction](https://img.shields.io/badge/H100%20reproduction-val__bpb%3D1.0016-success)](experiments/003-h100-comparison/results-summary.md)
 [![Tutorial](https://img.shields.io/badge/Tutorial-8%20chapters-blue)](docs/vibe-coding-tutorial/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Built with Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-6B48FF?logo=anthropic)](https://claude.ai/code)
@@ -16,15 +17,16 @@ Karpathy's [autoresearch](https://github.com/karpathy/autoresearch) shows that A
 
 This project answers: **Can you get the same results using cheap cloud GPUs, paying only pennies per experiment?**
 
-The answer is yes. We run 83 experiments **2.3x faster** and **5-18x cheaper** than the original, using SageMaker Spot instances that spin up for 5 minutes and disappear.
+The answer is yes. We run experiments **2.3× faster** and **5–18× cheaper** than the original, using SageMaker Spot instances that spin up for 5 minutes and disappear. And when H100 Spot is available, we **reproduce the upstream result to within +0.4%** for ~$3.
 
-| | Original (H100, 8 hours) | This project (L40S Spot) |
-|---|---|---|
-| Cost for 83 experiments | $7-24 | **$1.33** |
-| Wall clock time | ~8 hours | **~3.5 hours** |
-| GPU idle cost | ~50% wasted | **$0** (HUGI pattern) |
-| Experiments in parallel | 1 | **4** |
-| GPU required | H100 80GB | **Any** (L40S, A10G, H100...) |
+| | Original (H100, 8 hours) | L40S Spot (exp #002) | H100 Spot (exp #003) |
+|---|---|---|---|
+| Best val_bpb | ~0.998 | 1.0643 | **1.0016** (+0.4% vs upstream) |
+| Total jobs | — | 24 | 22 |
+| Cost | $7-24 | **$0.40** | **~$3.34** |
+| Wall clock | ~8 h | ~2.5 h | **~2 h** |
+| GPU idle cost | ~50% wasted | **$0** (HUGI) | **$0** (HUGI) |
+| Parallel jobs | 1 | 4 | 4 |
 
 ## Who Is This For?
 
@@ -238,9 +240,9 @@ After completion, analyze results.tsv and summarize findings.
 
 | # | Experiment | GPU | val_bpb | Cost | Key Finding |
 |---|-----------|-----|---------|------|-------------|
-| [001](experiments/001-baseline-l40s/report.md) | Baseline on L40S | ml.g7e.4xlarge | 1.065 | $0.04 | Pipeline validated, SDPA fallback works |
-| 002 | L40S Optimization | ml.g7e.4xlarge | _TBD_ | _TBD_ | [Research notes](references/l40s-optimization-strategies.md) |
-| 003 | H100 Fair Comparison | ml.p5.4xlarge | _TBD_ | _TBD_ | Pending quota approval |
+| [001](experiments/001-baseline-l40s/report.md) | Baseline on L40S | ml.g7e.2xlarge | 1.0654 | $0.04 | Pipeline validated, SDPA fallback works |
+| [002](experiments/002-optimization-l40s/results-summary.md) | L40S 5-gen Evolution | ml.g7e.2xlarge | **1.0643** | $0.40 | EMBEDDING_LR most impactful; architecture changes fail under 5-min budget |
+| [003](experiments/003-h100-comparison/results-summary.md) | H100 Fair Comparison | ml.p5.4xlarge | **1.0016** | ~$3.34 | Reproduced upstream (~0.998) within +0.4%; hardware+FA3 drives 97% of improvement |
 
 ## Choosing a Region: Spot Capacity Matters
 
