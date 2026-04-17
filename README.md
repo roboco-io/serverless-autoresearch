@@ -283,15 +283,17 @@ Follow the full journey of building this project through conversational AI codin
 
 ## Key Insights
 
-Lessons learned from running 20+ experiments on SageMaker Spot. Full list: **[docs/insights.md](docs/insights.md)**
+Lessons learned from running 48 experiments on SageMaker Spot (L40S + H100). Full list: **[docs/insights.md](docs/insights.md)**
 
 | # | Insight | Impact |
 |---|---------|--------|
 | 1 | Spot capacity varies 1-9 by region — always check placement scores first | Saves 30+ min of stuck jobs |
-| 3 | `DEVICE_BATCH_SIZE ≠ token throughput` — increase `TOTAL_BATCH_SIZE` instead | Avoided wrong optimization path |
 | 4 | Flash Attention 3 is Hopper-only; L40S needs FA2 or SDPA fallback | MFU 20% vs 40% |
 | 5 | SageMaker startup overhead is 3 min per job (60% for 5-min training) | Scale up > scale out |
 | 11 | **Spot GPUs are valid proxies for large-scale training** — architecture/optimizer rankings transfer, absolute LR/batch size don't | Cheap experiments ($0.04) inform expensive production runs |
+| **13** | **BS × LR × Hardware interact** — a BS=64-evolved LR is *not* optimal at BS=128, even on the same GPU | Joint BS+LR search is cheaper than fixing one wrong |
+| **14** | **L40S-evolved LRs transferred to H100 and beat upstream** — cheap-GPU evolution is a strong starting point, occasionally the final answer | $0.40 of L40S search → $0.16 H100 run beat upstream |
+| **15** | **Spot + HUGI reproduced Karpathy's H100 result for $0.16 in 229 s** (vs $7–24 and 8 h upstream) | 44–150× cost reduction, 24× wall-clock reduction |
 
 ## Documentation
 
